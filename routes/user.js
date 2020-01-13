@@ -3,7 +3,6 @@ var router = express.Router();
 const {
   login,
   register,
-  zc
 } = require('../controller/user')
 const {
   SuccessModel,
@@ -15,17 +14,16 @@ const {
 // 登录路由
 router.post('/login', function (req, res, next) {
   const {
-    username,
+    member_name,
     password,
     email
   } = req.body
 
-  const result = login(username, password, email)
+  const result = login(member_name, password, email)
   return result.then(data => {
-    if (data.username) {
+    if (data.member_name) {
       // 设置 session
-      console.log(data.username);
-      req.session.username = data.username
+      req.session.member_name = data.member_name
 
       res.json(
         new SuccessModel()
@@ -41,14 +39,14 @@ router.post('/login', function (req, res, next) {
 // 注册路由
 router.post('/register', function (req, res, next) {
   const {
-    username,
+    member_name,
     password,
     email,
     question,
-    answer
+    answer,
+    nickname
   } = req.body
-  // const result = register(username, password, question, answer, email)
-  const result = zc(username, password, question, answer, email)
+  const result = register(member_name, password, question, answer, email, nickname)
   return result.then(data => {
     // console.log(data)
     if (data) {

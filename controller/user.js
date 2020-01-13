@@ -5,44 +5,57 @@ const {
 	con
 } = require('../db/mysql')
 
-const login = (username, password, email) => {
+const login = (member_name, password, email) => {
 
 	const sql = `
-        select username from users where (username='${username}' OR email='${email}') and password='${password}'
+        select member_name from system_member where (member_name='${member_name}' OR email='${email}') and password='${password}'
     `
 	return exec(sql).then(rows => {
+		// console.log(rows[0]);
+		
 		return rows[0] || {}
 	})
 }
 
-const register = (username, password, question, answer, email) => {
 
+
+const register = (member_name, password, question, answer, email, nickname) => {
 	const test_user = `
-        select *from users where (username='${username}' OR email='${email}')
-    `
-	const register_user = `
-	    insert into users (username,password,question,answer,email) values ('${username}','${password}','${question}','${answer}','${email}' )
+		select *from system_member where (member_name='${member_name}' OR email='${email}')
 	`
-	return exec(test_user).then(rows => {
+	const register_user = `
+		insert into system_member (member_name,password,question,answer,email) values ('${member_name}','${password}','${question}','${answer}','${email}' )
+	`
 
+	return exec(test_user).then(rows => {
+		
 		if (rows[0]) {
-			return 'false'
+			return false
 		} else {
 			return exec(register_user).then(() => {
-				return 'true'
+				return true
 			})
 		}
 	})
 }
 
-async function zc(username, password, question, answer, email) {
+
+
+
+
+
+
+
+
+
+async function zc(member_name, password, question, answer, email) {
 	const test_user = `
-		select *from users where (username='${username}' OR email='${email}')
-	`
+        select *from system_member where (member_name='${member_name}' OR email='${email}')
+    `
 	const register_user = `
-		insert into users (username,password,question,answer,email) values ('${username}','${password}','${question}','${answer}','${email}' )
+				insert into system_member (member_name,password,question,answer,email,nickname) values ('${member_name}','${password}','${question}','${answer}','${email}','${nickname}' )
 	`
-	
+
 	try {
 		await con.promise().beginTransaction();
 		const nouser = await exec(test_user)
