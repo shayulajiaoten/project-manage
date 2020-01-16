@@ -7,6 +7,7 @@ const {
   team_members_list,
   invite_member,
   delete_member,
+  noteam_member
 } = require('../controller/members')
 const {
   SuccessModel,
@@ -63,14 +64,27 @@ router.get('/teamMembersList', (req, res, next) => {
   })
 })
 
-
+// 查询没有加入任何团队的成员
+router.get('/noTeam', (req, res, next) => {
+  const result = noteam_member()
+  return result.then(dataList => {
+    res.json(
+      new SuccessModel(dataList)
+    )
+  })
+})
 
 // 邀请团队成员
 // teanName:团队名;memberId:被邀请成员Id
 router.post('/inviteMember', (req, res, next) => {
+  const {
+    teamName,
+    memberId
+  } = req.body
   const result = invite_member(teamName, memberId)
-  return result.then((data)=>{
-    if(data){
+
+  return result.then((data) => {
+    if (data) {
       res.json(
         new SuccessModel('邀请成功')
       )
@@ -85,9 +99,13 @@ router.post('/inviteMember', (req, res, next) => {
 // 移除团队成员
 // teanName:团队名;memberId:被移除成员Id
 router.post('/deleteMember', (req, res, next) => {
+  const {
+    teamName,
+    memberId
+  } = req.body
   const result = delete_member(teamName, memberId)
-  return result.then((data)=>{
-    if(data){
+  return result.then((data) => {
+    if (data) {
       res.json(
         new SuccessModel('移除成功')
       )

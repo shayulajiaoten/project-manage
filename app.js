@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var homeRouter = require('./routes/home')
 var userRouter = require('./routes/user');
+var projectRouter = require('./routes/project')
 var membersRouter = require('./routes/members')
 const session = require('express-session')
 const RedisStore = require('connect-redis')(session)
@@ -42,6 +43,7 @@ app.use(session({
 app.use('/api/user', userRouter)
 app.use('/api/home', homeRouter)
 app.use('/api/members', membersRouter)
+app.use('/api/project', projectRouter)
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));

@@ -52,11 +52,12 @@ const team_members_list = (teamName) => {
 
 // 邀请团队成员
 const invite_member = (teamName, memberId) => {
+  const member_name = 'member_nam1e'
   const ismember_sql = `
     select *from system_member where (member_name = '${member_name}' and team='${teamName}')
-  `
+  ` // 必须为团队成员才能邀请
   const update_member_sql = `
-    UPDATE system_member SET team=${teamName} WHERE  id=${memberId}
+    UPDATE system_member SET team='${teamName}' WHERE  id='${memberId}'
   `
   return exec(ismember_sql).then((rows) => {
     if (rows[0]) {
@@ -71,13 +72,15 @@ const invite_member = (teamName, memberId) => {
 
 // 移除团队成员
 const delete_member = (teamName, memberId) => {
-  const ismember_sql = `
-    select *from system_member where (member_name = '${member_name}' and team='${teamName}')
-  `
+  // member_name为当前session操作的name
+  const member_name = 'undefined'
+  const isleader_sql = `
+    select *from system_member where (member_name = '${member_name}' and team='${teamName}' and is_team_leader=1)
+  ` // 必须为队长才能移除团队成员
   const update_member_sql = `
-    UPDATE system_member SET team=${teamName} WHERE  id=${memberId}
+    UPDATE system_member SET team='' WHERE  id='${memberId}'
   `
-  return exec(ismember_sql).then((rows) => {
+  return exec(isleader_sql).then((rows) => {
     if (rows[0]) {
       return exec(update_member_sql).then(() => {
         return true
@@ -88,11 +91,20 @@ const delete_member = (teamName, memberId) => {
   })
 }
 
+// 查询没有加入任何团队的成员
+const noteam_member = () => {
+  const query_list_sql = `
+  select id,member_name,nickname,email,is_team_leader from system_member where (team='')
+`
+  return exec(query_list_sql)
+}
+
 module.exports = {
   create_team,
   create_team_list,
   team_list,
   team_members_list,
   invite_member,
-  delete_member
+  delete_member,
+  noteam_member,
 }
