@@ -1,12 +1,13 @@
 const {
-	exec,
-	con
+  exec,
+  con
 } = require('../db/mysql')
 
 // 申请创建项目
 const create_project = (teamName) => {
+  // 判断当前用户是否为队长
   const test_sql = `
-      select  *from leader_member_relation where (team='${teamName}')
+      select  *from system_member where (team='${teamName}' and )
   `
   const create_sql = `
       insert into team_create (team,creator) values ('${teamName}','321' )
