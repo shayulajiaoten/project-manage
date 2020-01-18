@@ -1,5 +1,5 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const {
   create_team,
   create_team_list,
@@ -9,6 +9,7 @@ const {
   delete_member,
   noteam_member
 } = require('../controller/members')
+
 const {
   SuccessModel,
   ErrorModel

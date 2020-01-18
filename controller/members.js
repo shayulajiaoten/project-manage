@@ -7,7 +7,7 @@ const {
 // 申请创建团队
 const create_team = (teamName) => {
   const test_sql = `
-      select  *from leader_member_relation where (team='${teamName}')
+      select  *from team where (team='${teamName}')
   `
   const create_sql = `
       insert into team_create (team,creator) values ('${teamName}','321' )
