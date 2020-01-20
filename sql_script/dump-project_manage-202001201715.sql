@@ -129,35 +129,6 @@ LOCK TABLES `project_task_relation` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `project_template`
---
-
-DROP TABLE IF EXISTS `project_template`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `project_template` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键自动递增',
-  `picture_path` varchar(256) NOT NULL DEFAULT '' COMMENT '模板图片路径',
-  `template_name` varchar(64) NOT NULL DEFAULT '' COMMENT '模板名字',
-  `description` varchar(256) DEFAULT '' COMMENT '描述',
-  `creator` varchar(32) NOT NULL DEFAULT '' COMMENT '创建人',
-  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `updater` varchar(32) DEFAULT '' COMMENT '更新人',
-  `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='模板表';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `project_template`
---
-
-LOCK TABLES `project_template` WRITE;
-/*!40000 ALTER TABLE `project_template` DISABLE KEYS */;
-/*!40000 ALTER TABLE `project_template` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `role_menu_relation`
 --
 
@@ -377,6 +348,37 @@ INSERT INTO `team_create` VALUES (1,'123','321','2020-01-14 11:16:59',0,0),(2,'1
 UNLOCK TABLES;
 
 --
+-- Table structure for table `template_task`
+--
+
+DROP TABLE IF EXISTS `template_task`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `template_task` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键自动递增',
+  `picture_path` varchar(256) NOT NULL DEFAULT '' COMMENT '模板图片路径',
+  `template_name` varchar(64) NOT NULL DEFAULT '' COMMENT '模板名字',
+  `description` varchar(256) DEFAULT '' COMMENT '描述',
+  `creator` varchar(32) NOT NULL DEFAULT '' COMMENT '创建人',
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updater` varchar(32) DEFAULT '' COMMENT '更新人',
+  `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+  `task_name` varchar(64) NOT NULL COMMENT '任务名',
+  `system_task` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否系统默认任务',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='模板任务关系表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `template_task`
+--
+
+LOCK TABLES `template_task` WRITE;
+/*!40000 ALTER TABLE `template_task` DISABLE KEYS */;
+/*!40000 ALTER TABLE `template_task` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Dumping routines for database 'project_manage'
 --
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -389,4 +391,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-01-19 18:02:09
+-- Dump completed on 2020-01-20 17:15:05
