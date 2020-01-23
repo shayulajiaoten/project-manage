@@ -23,6 +23,8 @@ const create_project = (projectName, templateId, description, teamName, username
       (project_name,template_id,description,creator,team) values 
       ('${projectName}','${templateId}','${description}','${username}','${teamName}' )
     `
+  // 根据模板id创建项目对应任务
+  const
   // 验证为团队队长后直接创建项目 
   const create_project = `
       insert into system_project 
