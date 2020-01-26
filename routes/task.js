@@ -12,12 +12,13 @@ const {
 // } = req.session
 
 // 创建对应项目任务
-router.post('/project/createTask', (req, res, next) => {
+router.post('/createTask', (req, res, next) => {
   const username = 'member_name'
   const {
     projectId,
     taskName
   } = req.body
+  
   const result = create_task(projectId, taskName)
   return result.then(() => {
     return res.json(

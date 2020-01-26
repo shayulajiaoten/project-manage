@@ -14,7 +14,7 @@ const {
 // } = req.session
 
 // 创建模板
-router.get('/createTemplate', (req, res, next) => {
+router.post('/createTemplate', (req, res, next) => {
   const username = 'member_name'
   const {
     picturePath,
@@ -35,7 +35,7 @@ router.get('/createTemplate', (req, res, next) => {
 })
 
 // 修改模板信息
-router.get('/changeTemplate', (req, res, next) => {
+router.post('/changeTemplate', (req, res, next) => {
   const {
     picturePath,
     templateName,
@@ -56,7 +56,7 @@ router.post('/addTemplateTask', (req, res, next) => {
     templateId,
     taskName
   } = req.body
-  const result = add_template_task(templateId, taskName)
+  const result = add_template_task(templateId, taskName, username)
   return result.then(() => {
     return res.json(
       new SuccessModel('添加模板任务成功')

@@ -16,11 +16,11 @@ api/project/unPigeonhole --取消回收
 api/project/collect --收藏
 api/project/unCollect --取消收藏
 api/project/changeMessage --项目信息更改
-
-
-未验证
 api/template/createTemplate --创建模板
 api/template/changeTemplate --修改模板信息
 api/template/add_template_task --添加模板任务
-api/task/project/createTask --创建项目模板
+
+
+未验证
+api/task/project/createTask --创建项目任务
 未验证

@@ -1,5 +1,6 @@
 const {
-  exec
+  exec,
+  con
 } = require('../db/mysql')
 
 // 申请/创建项目
@@ -24,7 +25,12 @@ const create_project = (projectName, templateId, description, teamName, username
       ('${projectName}','${templateId}','${description}','${username}','${teamName}' )
     `
   // 根据模板id创建项目对应任务
-  const
+  const select_tempalte_sql = `
+    select task_name from template_task
+    where
+    template='${templateId}'
+  `
+
   // 验证为团队队长后直接创建项目 
   const create_project = `
       insert into system_project 
@@ -36,11 +42,21 @@ const create_project = (projectName, templateId, description, teamName, username
       if (rows[0]) {
         return exec(test_same_sql).then((rows) => {
           if (!rows[0]) {
-            console.log(create_project);
+            return exec(create_project).then((rows) => {
+              const project_id = rows.insertId
+              return exec(select_tempalte_sql).then((rows) => {
+                rows.map((d, i) => {
+                  const username = 'member_name'
+                  const add_task_sql = `
+                    insert into project_task_relation (task_name,creator,project_id) 
+                    values
+                    ('${d.task_name}','${username}','${project_id}')
+                  `
+                  con.query(add_task_sql)
+                })
+                return 1 // 创建成功  
+              })
 
-            return exec(create_project).then(() => {
-
-              return 1 // 创建成功
             })
           } else {
             return -2 // 项目已存在
@@ -155,8 +171,7 @@ const change_messsage_project = (projectId, plan, projectName, description) => {
   const change_sql = `
       update system_project set  plan='${plan}',project_name='${projectName}',description='${description}' where id='${projectId}'
   `
-  console.log(change_sql);
-  
+
   return exec(change_sql)
 }
 module.exports = {

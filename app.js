@@ -7,6 +7,8 @@ var homeRouter = require('./routes/home')
 var userRouter = require('./routes/user');
 var projectRouter = require('./routes/project')
 var membersRouter = require('./routes/members')
+var templateRouter = require('./routes/template')
+var taskRouter = require('./routes/task')
 const session = require('express-session')
 const RedisStore = require('connect-redis')(session)
 
@@ -44,6 +46,8 @@ app.use('/api/user', userRouter)
 app.use('/api/home', homeRouter)
 app.use('/api/members', membersRouter)
 app.use('/api/project', projectRouter)
+app.use('/api/template', templateRouter)
+app.use('/api/task', taskRouter)
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
