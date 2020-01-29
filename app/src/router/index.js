@@ -336,14 +336,14 @@ const router = new Router({
             model: 'Login'
           },
         },
-        // {
-        //   path: 'forgot',
-        //   name: 'forgot',
-        //   component: () => import( /* webpackChunkName: "user" */ '@/views/member/forgot'),
-        //   meta: {
-        //     model: 'Login'
-        //   },
-        // },
+        {
+          path: 'forgot',
+          name: 'forgot',
+          component: () => import( /* webpackChunkName: "user" */ '@/views/member/Forgot'),
+          meta: {
+            model: 'Login'
+          },
+        },
         // {
         //     path: 'register-result',
         //     name: 'registerResult',

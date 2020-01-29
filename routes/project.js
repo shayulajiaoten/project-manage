@@ -11,7 +11,8 @@ const {
   un_recycle_project,
   un_pigeonhole_project,
   un_collect_project,
-  change_messsage_project
+  change_messsage_project,
+  invite_member,
 } = require('../controller/project')
 const {
   SuccessModel,
@@ -136,7 +137,9 @@ router.get('/pigeonholeList', (req, res, next) => {
 
 // 将项目丢进回收站
 router.post('/recycle', (req, res, next) => {
-  const { projectId } = req.body
+  const {
+    projectId
+  } = req.body
   const result = recycle_project(projectId)
   return result.then(() => {
     return res.json(
@@ -147,7 +150,9 @@ router.post('/recycle', (req, res, next) => {
 
 // 项目归档
 router.post('/pigeonhole', (req, res, next) => {
-  const { projectId } = req.body
+  const {
+    projectId
+  } = req.body
   const result = pigeonhole_project(projectId)
   return result.then(() => {
     return res.json(
@@ -158,7 +163,9 @@ router.post('/pigeonhole', (req, res, next) => {
 
 // 取消回收
 router.post('/unRecycle', (req, res, next) => {
-  const { projectId } = req.body
+  const {
+    projectId
+  } = req.body
   const result = un_recycle_project(projectId)
   return result.then(() => {
     return res.json(
@@ -169,7 +176,9 @@ router.post('/unRecycle', (req, res, next) => {
 
 // 取消归档
 router.post('/unPigeonhole', (req, res, next) => {
-  const { projectId } = req.body
+  const {
+    projectId
+  } = req.body
   const result = un_pigeonhole_project(projectId)
   return result.then(() => {
     return res.json(
@@ -180,7 +189,9 @@ router.post('/unPigeonhole', (req, res, next) => {
 
 // 收藏项目
 router.post('/collect', (req, res, next) => {
-  const { projectId } = req.body
+  const {
+    projectId
+  } = req.body
   const username = 'member_name'
   const result = collect_project(projectId, username)
   return result.then(() => {
@@ -192,7 +203,9 @@ router.post('/collect', (req, res, next) => {
 
 // 取消收藏
 router.post('/unCollect', (req, res, next) => {
-  const { projectId } = req.body
+  const {
+    projectId
+  } = req.body
   const username = 'member_name'
   const result = un_collect_project(projectId, username)
   return result.then(() => {
@@ -214,6 +227,20 @@ router.post('/changeMessage', (req, res, next) => {
   return result.then(() => {
     return res.json(
       new SuccessModel('更改成功')
+    )
+  })
+})
+
+// 邀请团队成员
+router.post('./inviteMember', (req, res, next) => {
+  const {
+    projectId,
+    memberName
+  } = req.body
+  const result = invite_member(projectId, memberName)
+  return result.then(() => {
+    return res.json(
+      new SuccessModel('添加成功')
     )
   })
 })

@@ -9,6 +9,7 @@ import 'ant-design-vue/dist/antd.css'
 import '@/assets/css/theme.less'
 import '@/assets/icon/iconfont'
 import WrapperContent from '@/components/layout/WrapperContent'
+import common from "./mixins/common";
 
 import {
   message,
@@ -43,6 +44,7 @@ Vue.config.productionTip = false
 //     keepShow: false
 //   }
 // }
+Vue.mixin(common);
 new Vue({
   render: h => h(App),
   store,

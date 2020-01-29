@@ -281,12 +281,12 @@
                     });
                 } else if (action == 'collect') {
                     const type = record.collected ? 'cancel' : 'collect';
-                    collect(record.code, type).then(() => {
-                        app.$set(app.dataSource[index], 'collected', !record.collected);
-                        if (this.requestData.type == 'collect') {
-                            app.dataSource.splice(index, 1);
-                        }
-                    });
+                    // collect(record.code, type).then(() => {
+                    //     app.$set(app.dataSource[index], 'collected', !record.collected);
+                    //     if (this.requestData.type == 'collect') {
+                    //         app.dataSource.splice(index, 1);
+                    //     }
+                    // });
                 }
             },
             updateProject(data) {

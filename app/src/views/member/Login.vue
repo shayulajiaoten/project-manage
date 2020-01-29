@@ -38,7 +38,6 @@
             </a-input>
           </a-form-item>
           <a-form-item>
-            <a-checkbox v-model="formLogin.rememberMe">自动登录</a-checkbox>
             <a
               class="forge-password"
               style="float: right;"
@@ -66,6 +65,9 @@
 </template>
 
 <script>
+import { Login } from "@/api/user";
+import { checkResponse } from "@/assets/js/utils";
+import $router from '../../router/index';
 export default {
   name: "Login",
   data() {
@@ -87,7 +89,6 @@ export default {
         password: "",
         captcha: "",
         mobile: "",
-        rememberMe: true
       }
     };
   },
@@ -100,6 +101,33 @@ export default {
         this.loginType = 1;
       }
       callback();
+    },
+    handleSubmit() {
+      const app = this;
+      let loginParams = {
+      };
+      app.form.validateFields(
+        ["account", "password"],
+        { force: true },
+        (err, values) => {
+          if (!err) {
+            loginParams.member_name = values.account
+            loginParams.password = values.password;
+            app.loginBtn = true;
+            Login(loginParams)
+              .then(res => {
+                if (checkResponse(res)) {
+                  // this.dealDataBeforeLogin(res);
+                  this.$router.push('/home');
+                }
+                this.loginBtn = false;
+              })
+              .catch(() => {
+                this.loginBtn = false;
+              });
+          }
+        }
+      );
     }
   }
 };

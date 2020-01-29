@@ -26,7 +26,7 @@ const create_project = (projectName, templateId, description, teamName, username
     `
   // 根据模板id创建项目对应任务
   const select_tempalte_sql = `
-    select task_name from template_task
+    select task_name from template_task_relation
     where
     template='${templateId}'
   `
@@ -46,7 +46,7 @@ const create_project = (projectName, templateId, description, teamName, username
               const project_id = rows.insertId
               return exec(select_tempalte_sql).then((rows) => {
                 rows.map((d, i) => {
-                  const username = 'member_name'
+                  // 添加对应模板任务
                   const add_task_sql = `
                     insert into project_task_relation (task_name,creator,project_id) 
                     values
@@ -54,7 +54,18 @@ const create_project = (projectName, templateId, description, teamName, username
                   `
                   con.query(add_task_sql)
                 })
-                return 1 // 创建成功  
+                return project_id
+              }).then((project_id) => {
+                // 直接创建项目时对应创建的用户（项目成员关系表）
+                const username = 'member_name'
+                const add_relation_sql = `
+                  insert into project_member_relation (project_id,member_name)
+                  values
+                  ('${project_id}','${username}')
+                `
+                return exec(add_relation_sql).then(() => {
+                  return 1 // 创建成功
+                })
               })
 
             })
@@ -174,6 +185,17 @@ const change_messsage_project = (projectId, plan, projectName, description) => {
 
   return exec(change_sql)
 }
+
+
+//邀请项目成员
+const invite_member = (projectId, memberName) => {
+  const invite_sql = `
+    insert into project_member_relation
+    (project_id,member_name)
+    values
+    ('${projectId}','${memberName}')
+  `
+}
 module.exports = {
   create_project,
   project_list,
@@ -185,5 +207,6 @@ module.exports = {
   un_pigeonhole_project,
   collect_project,
   un_collect_project,
-  change_messsage_project
+  change_messsage_project,
+  invite_member,
 }

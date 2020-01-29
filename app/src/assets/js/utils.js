@@ -1,28 +1,28 @@
-// import {notice} from './notice';
+import {notice} from './notice';
 // import config from '../../config/config'
 // import {getStore} from "./storage";
 
 // const PROD_URL = config.PROD_URL;
 // const crossDomain = config.crossDomain;
 
-// /**
-//  * 判断客户端返回状态
-//  * @param res
-//  * @param show_msg
-//  * @returns {boolean}
-//  */
-// export const checkResponse = (res, show_msg = false) => {
-//     const code = res.code;
-//     const msg = res.msg;
-//     if (code !== 200) {
-//         if (show_msg) {
-//             notice(msg);
-//         }
-//         return false
-//     } else {
-//         return true
-//     }
-// };
+/**
+ * 判断客户端返回状态
+ * @param res
+ * @param show_msg
+ * @returns {boolean}
+ */
+export const checkResponse = (res, show_msg = false) => {
+    const code = res.code;
+    const msg = res.msg;
+    if (code !== 200) {
+        if (show_msg) {
+            notice(msg);
+        }
+        return false
+    } else {
+        return true
+    }
+};
 // /**
 //  * 创建路由对象
 //  * @returns {boolean}

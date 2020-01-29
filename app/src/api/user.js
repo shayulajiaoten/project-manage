@@ -1,19 +1,15 @@
 import $http from '@/assets/js/http'
 
 export async function Login(data) {
-    return $http.post('project/login', data);
+    return $http.post('api/user/login', data);
 }
 
 export function register(data) {
-    return $http.post('project/login/register', data);
+    return $http.post('api/user/register', data);
 }
 
-export function getCaptcha(mobile) {
-    return $http.post('project/login/getCaptcha', {mobile: mobile});
-}
-
-export function _getMailCaptcha(email) {
-    return $http.post('project/login/_getMailCaptcha', {email: email});
+export function getanswer(data) {
+    return $http.post('api/user/getAnswer', data);
 }
 
 export function _resetPasswordByMail(data) {
