@@ -4,10 +4,10 @@ const {
 } = require('../db/mysql')
 
 // 登录
-const login = (member_name, password, email) => {
+const login = (member_name, password) => {
 
 	const sql = `
-        select member_name from system_member where (member_name='${member_name}' OR email='${email}') and password='${password}'
+        select member_name from system_member where (member_name='${member_name}' OR email='${member_name}') and password='${password}'
     `
 	return exec(sql).then(rows => {
 		// console.log(rows[0]);

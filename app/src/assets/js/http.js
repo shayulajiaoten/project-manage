@@ -2,18 +2,11 @@ import {
 	message,
 } from 'ant-design-vue'
 import Axios from "axios"
-import * as utils from './utils'
-import {
-	getStore
-} from './storage'
-import $store from '../../store/index';
-import $router from '../../router/index';
 import {
 	notice
 } from './notice';
 import config from "../../config/config";
 
-const HOME_PAGE = config.HOME_PAGE;
 const crossDomain = config.crossDomain;
 let axiosConfig = {};
 if (crossDomain) {
@@ -33,7 +26,7 @@ $http.interceptors.response.use(
 			return Promise.resolve(response);
 		} else {
 			notice({
-				title: response.msg !== '' ? response.msg : '请求成功',
+				title: response.msg ? response.msg : '请求成功',
 			}, 'notice', 'success', 3);
 			return Promise.resolve(response);
 		}

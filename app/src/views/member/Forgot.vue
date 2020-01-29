@@ -44,8 +44,6 @@
         <span>重置密码</span>
       </h3>
       <a-form :form="form" ref="formRegister" id="formRegister">
-        
-
         <a-popover placement="rightTop" trigger="click" :visible="state.passwordLevelChecked">
           <template slot="content">
             <div :style="{ width: '240px' }">
@@ -91,10 +89,10 @@
 
         <a-form-item>
           <a-input
-            v-decorator="['captcha',{rules: [{ required: true, message: '请输入验证码' }], validateTrigger: ['blur']}]"
+            v-decorator="['answer',{rules: [{ required: true, message: '请输入密保答案' }], validateTrigger: ['blur']}]"
             size="large"
             type="text"
-            placeholder="验证码"
+            :placeholder="question"
           >
             <a-icon slot="prefix" type="safety-certificate" :style="{ color: 'rgba(0,0,0,.25)' }" />
           </a-input>
@@ -119,28 +117,26 @@
 
 <script>
 // import md5 from 'md5'
-import { forgot } from "@/api/user";
+import { getQuestion, changePassword } from "@/api/user";
 import { checkResponse } from "../../assets/js/utils";
 import { notice } from "../../assets/js/notice";
-// import {_getMailCaptcha, _resetPasswordByMail} from "../../api/user";
-
 const levelNames = {
-    0: '低',
-    1: '低',
-    2: '中',
-    3: '强'
+  0: "低",
+  1: "低",
+  2: "中",
+  3: "强"
 };
 const levelClass = {
-    0: 'error',
-    1: 'error',
-    2: 'warning',
-    3: 'success'
+  0: "error",
+  1: "error",
+  2: "warning",
+  3: "success"
 };
 const levelColor = {
-    0: '#ff0000',
-    1: '#ff0000',
-    2: '#ff7e05',
-    3: '#52c41a',
+  0: "#ff0000",
+  1: "#ff0000",
+  2: "#ff7e05",
+  3: "#52c41a"
 };
 export default {
   name: "Forgot",
@@ -152,7 +148,8 @@ export default {
       email: "",
       sended: false,
       forgotBtn: false,
-
+      question: "",
+      currentId: undefined,
       state: {
         time: 60,
         smsSendBtn: false,
@@ -165,108 +162,104 @@ export default {
     };
   },
   computed: {
-      passwordLevelClass() {
-          return levelClass[this.state.passwordLevel]
-      },
-      passwordLevelName() {
-          return levelNames[this.state.passwordLevel]
-      },
-      passwordLevelColor() {
-          return levelColor[this.state.passwordLevel]
-      },
+    passwordLevelClass() {
+      return levelClass[this.state.passwordLevel];
+    },
+    passwordLevelName() {
+      return levelNames[this.state.passwordLevel];
+    },
+    passwordLevelColor() {
+      return levelColor[this.state.passwordLevel];
+    }
   },
   methods: {
     handleSubmitCaptcha() {
       this.formCaptcha.validateFields((err, values) => {
         if (!err) {
-        //   this.forgotBtn = true;
+          //   this.forgotBtn = true;
           let params = this.formCaptcha.getFieldsValue();
-          this.email = params.email;
           console.log(params);
-            this.sended = true;
-        //     _getMailCaptcha(this.email).then(res => {
-        //       this.sended = true;
-        //       this.forgotBtn = false;
-        //       this.$message.destroy();
-        //       if (!checkResponse(res)) {
-        //         return false;
-        //       }
-        //       let tips = "验证码获取成功";
-        //       if (res.data) {
-        //         tips += "，您的验证码为：" + res.data;
-        //       }
-        //       notice({ title: "提示", msg: tips }, "notification", "success", 8);
-        //     });
+          getQuestion(params).then(res => {
+            console.log(res);
+            this.currentId = res.data[0].id
+            this.question = res.data[0].question;
+            if (res.errno != -1) {
+              this.sended = true;
+            }
+          });
         }
       });
     },
-    //     handleSubmit() {
-    //         this.form.validateFields((err, values) => {
-    //             if (!err) {
-    //                 this.hidePasswordLevelChecked = false ;
-    //                 this.registerBtn = true;
-    //                 let params = this.form.getFieldsValue();
-    //                 params.email = this.email;
-    //                 params.password = md5(params.password);
-    //                 params.password2 = md5(params.password2);
-    //                 _resetPasswordByMail(params).then(res => {
-    //                     this.registerBtn = false;
-    //                     if (!checkResponse(res)) {
-    //                         return false;
-    //                     }
-    //                     notice({title: '提示', msg: '重置密码成功，请登录'}, 'notification', 'success');
-    //                     this.$router.push({name: 'login'})
-    //                 });
-    //             }
-    //         })
-    //     },
-        handlePasswordInputClick() {
-            this.state.passwordLevelChecked = true;
-        },
-        hidePasswordLevelChecked() {
-            this.state.passwordLevelChecked = false;
-        },
-        handlePasswordLevel(rule, value, callback) {
+    handleSubmit() {
+      this.form.validateFields((err, values) => {
+        if (!err) {
+          this.hidePasswordLevelChecked = false;
+          this.registerBtn = true;
+          let params = this.form.getFieldsValue();
+          params.id = this.currentId
+          changePassword(params).then(res => {
+            this.currentId = undefined
+            this.question = undefined
+            this.registerBtn = false;
+            if (!checkResponse(res)) {
+              return false;
+            }
+            notice(
+              { title: "提示", msg: "重置密码成功，请登录" },
+              "notification",
+              "success"
+            );
+            this.$router.push({ name: "login" });
+          });
+        }
+      });
+    },
+    handlePasswordInputClick() {
+      this.state.passwordLevelChecked = true;
+    },
+    hidePasswordLevelChecked() {
+      this.state.passwordLevelChecked = false;
+    },
+    handlePasswordLevel(rule, value, callback) {
+      let level = 0;
 
-            let level = 0;
+      // 判断这个字符串中有没有数字
+      if (/[0-9]/.test(value)) {
+        level++;
+      }
+      // 判断字符串中有没有字母
+      if (/[a-zA-Z]/.test(value)) {
+        level++;
+      }
+      // 判断字符串中有没有特殊符号
+      if (/[^0-9a-zA-Z_]/.test(value)) {
+        level++;
+      }
+      this.state.passwordLevel = level;
+      this.state.percent = level * 30;
+      if (level >= 2) {
+        if (level >= 3) {
+          this.state.percent = 100;
+        }
+        callback();
+      } else {
+        if (level === 0) {
+          this.state.percent = 10;
+        }
+        callback(new Error("密码强度不够"));
+      }
+    },
 
-            // 判断这个字符串中有没有数字
-            if (/[0-9]/.test(value)) {
-                level++
-            }
-            // 判断字符串中有没有字母
-            if (/[a-zA-Z]/.test(value)) {
-                level++
-            }
-            // 判断字符串中有没有特殊符号
-            if (/[^0-9a-zA-Z_]/.test(value)) {
-                level++
-            }
-            this.state.passwordLevel = level;
-            this.state.percent = level * 30;
-            if (level >= 2) {
-                if (level >= 3) {
-                    this.state.percent = 100
-                }
-                callback()
-            } else {
-                if (level === 0) {
-                    this.state.percent = 10
-                }
-                callback(new Error('密码强度不够'))
-            }
-        },
-
-        handlePasswordCheck(rule, value, callback) {
-            const password = this.form.getFieldValue('password');
-            if (value === undefined) {
-                callback(new Error('请输入密码'))
-            }
-            if (value && password && value.trim() !== password.trim()) {
-                callback(new Error('两次密码不一致'))
-            }
-            callback()
-        },
+    handlePasswordCheck(rule, value, callback) {
+      const password = this.form.getFieldValue("password");
+      if (value === undefined) {
+        callback(new Error("请输入密码"));
+      }
+      if (value && password && value.trim() !== password.trim()) {
+        callback(new Error("两次密码不一致"));
+      }
+      callback();
+    }
   }
   // watch: {}
 };

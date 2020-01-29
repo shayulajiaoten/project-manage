@@ -8,9 +8,14 @@ export function register(data) {
     return $http.post('api/user/register', data);
 }
 
-export function getanswer(data) {
-    return $http.post('api/user/getAnswer', data);
+export function getQuestion(data) {
+    return $http.post('api/user/getQuestion', data);
 }
+
+export function changePassword(data) {
+    return $http.post('api/user/changePassword', data);
+}
+
 
 export function _resetPasswordByMail(data) {
     return $http.post('project/login/_resetPasswordByMail', data);

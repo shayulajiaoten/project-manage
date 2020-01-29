@@ -25,8 +25,8 @@
         :fieldDecoratorOptions="{rules: [{ required: true, message: '请选择密保问题' }], validateTrigger: ['change', 'blur']}"
       >
         <a-select size="large" placeholder="请选择密保问题">
-          <a-select-option value="phone">你的手机号码</a-select-option>
-          <a-select-option value="profession">你的职业</a-select-option>
+          <a-select-option value="你的手机号码">你的手机号码</a-select-option>
+          <a-select-option value="你的职业">你的职业</a-select-option>
         </a-select>
       </a-form-item>
       <a-form-item
@@ -88,7 +88,6 @@
 </template>
 
 <script>
-// import md5 from 'md5'
 import { register } from "@/api/user";
 import { checkResponse } from "../../assets/js/utils";
 import { notice } from "../../assets/js/notice";
