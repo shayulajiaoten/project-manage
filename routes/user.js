@@ -26,7 +26,6 @@ router.post('/login', (req, res, next) => {
     if (data.member_name) {
       // 设置 session
       req.session.member_name = data.member_name
-
       res.json(
         new SuccessModel('登录成功')
       )

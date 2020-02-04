@@ -25,9 +25,9 @@ $http.interceptors.response.use(
 			}, 'notice', 'error', 3);
 			return Promise.resolve(response);
 		} else {
-			notice({
-				title: response.msg ? response.msg : '请求成功',
-			}, 'notice', 'success', 3);
+			// notice({
+			// 	title: response.msg ? response.msg : '请求成功',
+			// }, 'notice', 'success', 3);
 			return Promise.resolve(response);
 		}
 	},

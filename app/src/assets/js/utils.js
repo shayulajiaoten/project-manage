@@ -68,23 +68,23 @@ export const createRoute = (data) => {
 //     });
 // };
 
-// /**
-//  * 获取完整的api请求地址
-//  */
+/**
+ * 获取完整的api请求地址
+ */
 // export const getFullUrl = (api) => {
 //     return PROD_URL + '/' + api
 // };
 
-// export const getApiUrl = (api) => {
-//     if (crossDomain) {
-//         return PROD_URL + '/' + api; //开启跨域直接返回
-//     }
-//     if (process.env.NODE_ENV === 'production') {
-//         return PROD_URL + '/' + api;
-//     } else {
-//         return '/api/' + api;
-//     }
-// };
+export const getApiUrl = (api) => {
+    // if (crossDomain) {
+    //     return PROD_URL + '/' + api; //开启跨域直接返回
+    // }
+    // if (process.env.NODE_ENV === 'production') {
+    //     return PROD_URL + '/' + api;
+    // } else {
+    //     return '/api/' + api;
+    // }
+};
 
 // /**
 //  * 获取上传文件地址

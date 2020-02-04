@@ -13,12 +13,14 @@ const {
   un_collect_project,
   change_messsage_project,
   invite_member,
+  collect_list,
+  get_project,
 } = require('../controller/project')
 const {
   SuccessModel,
   ErrorModel
 } = require('../model/resModel')
-
+const loginCheck = require('../middleware/loginCheck')
 const {
   getMember
 } = require('../controller/common')
@@ -28,7 +30,7 @@ const {
 
 
 // 创建项目申请(队长直接创建，成员需向队长申请项目)
-router.post('/createProject', (req, res, next) => {
+router.post('/createProject', loginCheck, (req, res, next) => {
   let {
     projectName, // 项目名
     templateId, // 模板id
@@ -73,13 +75,15 @@ router.post('/createProject', (req, res, next) => {
 })
 
 // 获得项目列表（不包含已归档和进入回收站）
-router.get('/projectList', (req, res, next) => {
+router.get('/projectList', loginCheck, (req, res, next) => {
   let teamName
-  const username = 'member_name'
-  return getMember(username).then((data) => {
+  const {
+    member_name
+  } = req.session
+  return getMember(member_name).then((data) => {
     if (data.team) {
       teamName = data.team
-      const result = project_list(teamName)
+      const result = project_list(teamName, member_name)
       return result.then((dataList) => {
         return res.json(
           new SuccessModel(dataList)
@@ -94,10 +98,12 @@ router.get('/projectList', (req, res, next) => {
 })
 
 // 获得回收站项目列表
-router.get('/recycleList', (req, res, next) => {
+router.get('/recycleList', loginCheck, (req, res, next) => {
   let teamName
-  const username = 'member_name'
-  return getMember(username).then((data) => {
+  const {
+    member_name
+  } = req.session
+  return getMember(member_name).then((data) => {
     if (data.team) {
       teamName = data.team
       const result = recycle_list(teamName)
@@ -114,11 +120,27 @@ router.get('/recycleList', (req, res, next) => {
   })
 })
 
+// 获得对应项目信息
+router.post('/getProject', loginCheck, (req, res, next) => {
+  const {
+    projectId
+  } = req.body
+  const result = get_project(projectId)
+  return result.then((data)=>{
+    return res.json(
+      new SuccessModel(data)
+    )
+  })
+
+})
+
 // 获得归档项目列表
-router.get('/pigeonholeList', (req, res, next) => {
+router.get('/pigeonholeList', loginCheck, (req, res, next) => {
   let teamName
-  const username = 'member_name'
-  return getMember(username).then((data) => {
+  const {
+    member_name
+  } = req.session
+  return getMember(member_name).then((data) => {
     if (data.team) {
       teamName = data.team
       const result = pigeonhole_list(teamName)
@@ -136,7 +158,7 @@ router.get('/pigeonholeList', (req, res, next) => {
 })
 
 // 将项目丢进回收站
-router.post('/recycle', (req, res, next) => {
+router.post('/recycle', loginCheck, (req, res, next) => {
   const {
     projectId
   } = req.body
@@ -149,7 +171,7 @@ router.post('/recycle', (req, res, next) => {
 })
 
 // 项目归档
-router.post('/pigeonhole', (req, res, next) => {
+router.post('/pigeonhole', loginCheck, (req, res, next) => {
   const {
     projectId
   } = req.body
@@ -162,7 +184,7 @@ router.post('/pigeonhole', (req, res, next) => {
 })
 
 // 取消回收
-router.post('/unRecycle', (req, res, next) => {
+router.post('/recovery', loginCheck, (req, res, next) => {
   const {
     projectId
   } = req.body
@@ -175,7 +197,7 @@ router.post('/unRecycle', (req, res, next) => {
 })
 
 // 取消归档
-router.post('/unPigeonhole', (req, res, next) => {
+router.post('/unPigeonhole', loginCheck, (req, res, next) => {
   const {
     projectId
   } = req.body
@@ -188,12 +210,14 @@ router.post('/unPigeonhole', (req, res, next) => {
 })
 
 // 收藏项目
-router.post('/collect', (req, res, next) => {
+router.post('/collect', loginCheck, (req, res, next) => {
   const {
-    projectId
+    projectId,
   } = req.body
-  const username = 'member_name'
-  const result = collect_project(projectId, username)
+  const {
+    member_name
+  } = req.session
+  const result = collect_project(projectId, member_name)
   return result.then(() => {
     return res.json(
       new SuccessModel('收藏成功')
@@ -202,12 +226,14 @@ router.post('/collect', (req, res, next) => {
 })
 
 // 取消收藏
-router.post('/unCollect', (req, res, next) => {
+router.post('/unCollect', loginCheck, (req, res, next) => {
   const {
     projectId
   } = req.body
-  const username = 'member_name'
-  const result = un_collect_project(projectId, username)
+  const {
+    member_name
+  } = req.session
+  const result = un_collect_project(projectId, member_name)
   return result.then(() => {
     return res.json(
       new SuccessModel('取消收藏成功')
@@ -215,8 +241,23 @@ router.post('/unCollect', (req, res, next) => {
   })
 })
 
+// 收藏项目列表
+router.get('/collectList', loginCheck, (req, res, next) => {
+  const {
+    member_name
+  } = req.session
+  const result = collect_list(member_name)
+  return result.then((dataList) => {
+    console.log(dataList);
+
+    return res.json(
+      new SuccessModel(dataList)
+    )
+  })
+})
+
 // 更改项目信息
-router.post('/changeMessage', (req, res, next) => {
+router.post('/changeMessage', loginCheck, (req, res, next) => {
   const {
     projectId,
     plan,
@@ -232,7 +273,7 @@ router.post('/changeMessage', (req, res, next) => {
 })
 
 // 邀请团队成员
-router.post('./inviteMember', (req, res, next) => {
+router.post('./inviteMember', loginCheck, (req, res, next) => {
   const {
     projectId,
     memberName

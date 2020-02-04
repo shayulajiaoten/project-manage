@@ -1,21 +1,20 @@
 import $http from '@/assets/js/http'
 
 export function list(data) {
-    return $http.post('project/department', data);
+    return $http.get('api/members/teamList', data);
 }
 
-export function read(departmentCode) {
-    return $http.post('project/department/read', {departmentCode: departmentCode});
-}
 
 export function doData(data) {
-    let url = 'project/department/save';
+    let url = 'api/members/createTeam';
     if (data.departmentCode) {
-        url = 'project/department/edit';
+        url = 'api/members/editTeam';
     }
     return $http.post(url, data);
 }
 
-export function del(departmentCode) {
-    return $http.post('project/department/delete', {departmentCode: departmentCode});
+
+
+export function del(teamName) {
+    return $http.post('api/members/deleteTeam', {teamName});
 }

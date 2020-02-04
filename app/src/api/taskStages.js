@@ -3,9 +3,6 @@ import $http from '@/assets/js/http'
 export function list(data) {
     return $http.post('project/task_stages', data);
 }
-export function _getAll(data) {
-    return $http.post('project/task_stages/_getAll', data);
-}
 
 export function tasks(data) {
     return $http.post('project/task_stages/tasks', data);

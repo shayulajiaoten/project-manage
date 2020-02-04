@@ -13,6 +13,3 @@ export function _joinByInviteLink(inviteCode) {
 export function removeMember(memberCode, code) {
     return $http.post('project/project_member/removeMember', {memberCode: memberCode, projectCode: code});
 }
-export function list(data) {
-    return $http.post('project/project_member/index', data);
-}

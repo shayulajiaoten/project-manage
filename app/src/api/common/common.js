@@ -12,9 +12,7 @@ export function inviteInfo(inviteCode) {
     return $http.post('project/invite_link/_read', {inviteCode: inviteCode});
 }
 
-export function createInviteLink(data) {
-    return $http.post('project/invite_link/save', data);
-}
+
 
 
 export function notifyOverview(to) {

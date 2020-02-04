@@ -91,11 +91,35 @@ const create_project = (projectName, templateId, description, teamName, username
 }
 
 // 获得项目列表（不包含已归档和进入回收站）
-const project_list = (teamName) => {
+const project_list = (teamName,member_name) => {
+  const collect_list_sql = `
+    select *from project_member_relation where (member_name='${member_name}' and collect=1)
+  `
   const list_sql = `
     select *from system_project where (team='${teamName}' and able='1' and recycle='0' and pigeonhole='0') 
   `
-  return exec(list_sql)
+  let projectIdList = []
+  return exec(collect_list_sql).then((res) => {
+    res.map((data) => {
+      projectIdList.push(data.project_id)
+    })
+  }).then(() => {
+    return exec(list_sql).then((res)=>{
+      return res.map((data)=>{
+        if(projectIdList.indexOf(data.id)>=0){
+          return Object.assign(data, {
+            collected: 1
+          })
+        }
+        return data
+      })
+    })
+  })
+}
+
+// 获得对应项目
+const getProject = () =>{
+  
 }
 
 // 获得回收站项目列表
@@ -125,7 +149,7 @@ const recycle_project = (projectId) => {
 // 取消回收
 const un_recycle_project = (projectId) => {
   const recycle_sql = `
-    UPDATE system_project SET recycle='01' WHERE  id='${projectId}'
+    UPDATE system_project SET recycle='0' WHERE  id='${projectId}'
   `
   return exec(recycle_sql)
 }
@@ -147,14 +171,14 @@ const un_pigeonhole_project = (projectId) => {
 }
 
 // 收藏项目
-const collect_project = (projectId, username) => {
+const collect_project = (projectId, member_name) => {
   const test_collect_sql = `
-      select *from project_member_relation where(project_id='${projectId}' and member_name='${username}')
+      select *from project_member_relation where(project_id='${projectId}' and member_name='${member_name}')
   `
   const add_collect_sql = `
       insert into project_member_relation
       (project_id,member_name) values
-      ('${projectId}','${username}')
+      ('${projectId}','${member_name}')
   `
   return exec(test_collect_sql).then((rows) => {
     if (rows[0]) {
@@ -169,10 +193,34 @@ const collect_project = (projectId, username) => {
   })
 }
 
+// 收藏项目列表
+const collect_list = (username) => {
+  const collect_list_sql = `
+    select *from project_member_relation where (member_name='${username}' and collect=1)
+  `
+  let projectIdList = []
+  return exec(collect_list_sql).then((res) => {
+    res.map((data) => {
+      projectIdList.push(data.project_id)
+    })
+  }).then(() => {
+    const select_sql = `
+      SELECT * FROM system_project WHERE (id IN (${projectIdList}) and recycle=0)
+    `
+    return exec(select_sql).then((res) => {
+      return res.map((data) => {
+        return Object.assign(data, {
+          collected: 1
+        })
+      })
+    })
+  })
+}
+
 // 取消收藏
-const un_collect_project = (projectId, username) => {
+const un_collect_project = (projectId, member_name) => {
   const un_collect_sql = `
-      update project_member_relation set collect='0' where (project_id='${projectId}' and member_name='${username}')
+      update project_member_relation set collect='0' where (project_id='${projectId}' and member_name='${member_name}')
   `
   return exec(un_collect_sql)
 }
@@ -209,4 +257,6 @@ module.exports = {
   un_collect_project,
   change_messsage_project,
   invite_member,
+  collect_list,
+  get_project,
 }
