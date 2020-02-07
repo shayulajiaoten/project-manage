@@ -86,18 +86,18 @@ export const getApiUrl = (api) => {
     // }
 };
 
-// /**
-//  * 获取上传文件地址
-//  * @param api
-//  * @returns {string}
-//  */
-// export const getUploadUrl = (api) => {
-//     let baseUrl = '';
-//     // if (process.env.NODE_ENV === 'production') {
-//     //     baseUrl = PROD_URL
-//     // }
-//     return baseUrl + getApiUrl(api)
-// };
+/**
+ * 获取上传文件地址
+ * @param api
+ * @returns {string}
+ */
+export const getUploadUrl = (api) => {
+    // let baseUrl = '';
+    // // if (process.env.NODE_ENV === 'production') {
+    // //     baseUrl = PROD_URL
+    // // }
+    // return baseUrl + getApiUrl(api)
+};
 
 
 // export const format_date = (data, show = true) => {

@@ -1,11 +1,11 @@
 import $http from '@/assets/js/http'
 
 export function list(data) {
-    return $http.post('project/task_stages', data);
+    return $http.post('api/task/taskList', data);
 }
 
 export function tasks(data) {
-    return $http.post('project/task_stages/tasks', data);
+    return $http.post('api/task/subTaskList', data);
 }
 
 export function sort(preCode, nextCode, projectCode) {

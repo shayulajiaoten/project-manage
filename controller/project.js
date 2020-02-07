@@ -91,7 +91,7 @@ const create_project = (projectName, templateId, description, teamName, username
 }
 
 // 获得项目列表（不包含已归档和进入回收站）
-const project_list = (teamName,member_name) => {
+const project_list = (teamName, member_name) => {
   const collect_list_sql = `
     select *from project_member_relation where (member_name='${member_name}' and collect=1)
   `
@@ -104,22 +104,80 @@ const project_list = (teamName,member_name) => {
       projectIdList.push(data.project_id)
     })
   }).then(() => {
-    return exec(list_sql).then((res)=>{
-      return res.map((data)=>{
-        if(projectIdList.indexOf(data.id)>=0){
+    return exec(list_sql).then((res) => {
+      return res.map((data) => {
+        if (projectIdList.indexOf(data.id) >= 0) {
           return Object.assign(data, {
             collected: 1
           })
+        } else {
+          return Object.assign(data, {
+            collected: 0
+          })
         }
-        return data
+      })
+    })
+  })
+}
+
+// 获得所有项目列表（不包含已归档和进入回收站）
+const all_project_list = (teamName, member_name) => {
+  const collect_list_sql = `
+    select *from project_member_relation where (member_name='${member_name}' and collect=1)
+  `
+  const list_sql = `
+    select *from system_project where (team='${teamName}') 
+  `
+  let projectIdList = []
+  return exec(collect_list_sql).then((res) => {
+    res.map((data) => {
+      projectIdList.push(data.project_id)
+    })
+  }).then(() => {
+    return exec(list_sql).then((res) => {
+      return res.map((data) => {
+        if (projectIdList.indexOf(data.id) >= 0) {
+          return Object.assign(data, {
+            collected: 1
+          })
+        } else {
+          return Object.assign(data, {
+            collected: 0
+          })
+        }
       })
     })
   })
 }
 
 // 获得对应项目
-const getProject = () =>{
-  
+const get_project = (projectId, member_name) => {
+  const select_sql = `
+    select *from system_project where (id='${projectId}')
+  `
+  const collect_list_sql = `
+    select *from project_member_relation where (member_name='${member_name}' and collect=1)
+  `
+  let projectIdList = []
+  return exec(collect_list_sql).then((res) => {
+    res.map((data) => {
+      projectIdList.push(data.project_id)
+    })
+  }).then(() => {
+    return exec(select_sql).then((res) => {
+      return res.map((data) => {
+        if (projectIdList.indexOf(data.id) >= 0) {
+          return Object.assign(data, {
+            collected: 1
+          })
+        } else {
+          return Object.assign(data, {
+            collected: 0
+          })
+        }
+      })
+    })
+  })
 }
 
 // 获得回收站项目列表
@@ -230,6 +288,7 @@ const change_messsage_project = (projectId, plan, projectName, description) => {
   const change_sql = `
       update system_project set  plan='${plan}',project_name='${projectName}',description='${description}' where id='${projectId}'
   `
+  console.log(change_sql);
 
   return exec(change_sql)
 }
@@ -247,6 +306,7 @@ const invite_member = (projectId, memberName) => {
 module.exports = {
   create_project,
   project_list,
+  all_project_list,
   recycle_list,
   pigeonhole_list,
   recycle_project,

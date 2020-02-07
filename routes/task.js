@@ -5,18 +5,19 @@ const {
   create_subtask,
   change_status,
   delete_subtask,
+  task_list,
+  subtask_list
 } = require('../controller/task')
 const {
   SuccessModel,
   ErrorModel
 } = require('../model/resModel')
 // const {
-//   username
+//   member_name
 // } = req.session
 const username = 'member_name'
 // 创建对应项目任务
 router.post('/createTask', (req, res, next) => {
-  const username = 'member_name'
   const {
     projectId,
     taskName
@@ -30,18 +31,47 @@ router.post('/createTask', (req, res, next) => {
   })
 })
 
+// 获得项目对应任务列表
+router.post('/taskList', (req, res, next) => {
+  const {
+    projectId
+  } = req.body
+  const result = task_list(projectId)
+  return result.then((dataList) => {
+    return res.json(
+      new SuccessModel(dataList)
+    )
+  })
+})
+
+// 获得项目任务对应子任务列表
+router.post('/subTaskList', (req, res, next) => {
+  const {
+    taskListId
+  } = req.body
+  const result = subtask_list(taskListId)
+  return result.then((dataList) => {
+    return res.json(
+      new SuccessModel(dataList)
+    )
+  })
+})
+
 // 添加对应子任务
 router.post('/createSubtask', (req, res, next) => {
-  const username = 'member_name'
   const {
-    projectTaskId,
-    taskName
+    member_name
+  } = req.session
+  const {
+    project_code,
+    stage_code,
+    name
   } = req.body
 
-  const result = create_subtask(projectTaskId, taskName, username)
-  return result.then(() => {
+  const result = create_subtask(stage_code, name, member_name, project_code)
+  return result.then((dataList) => {
     return res.json(
-      new SuccessModel('添加子任务任务成功')
+      new SuccessModel(dataList[0])
     )
   })
 })

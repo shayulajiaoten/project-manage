@@ -10,6 +10,7 @@ api/members/getCurrentTeam --当前用户所在团队
 api/members/createTeamList --查看团队创建申请列表
 api/members/teamList --查看已存在团队列表
 api/project/createProject --项目申请/创建
+api/project/getProject --对应项目
 api/project/projectList --获得项目列表（不包含已归档和进入回收站）
 api/project/recycleList --获得回收站项目列表
 api/project/pigeonholeList --获得归档项目列表

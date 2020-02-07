@@ -1,5 +1,11 @@
 import $http from '@/assets/js/http'
 
+
+// 添加子任务
+export function save(data) {
+    return $http.post('api/task/createSubtask', data);
+}
+
 export function list(data) {
     return $http.post('project/task', data);
 }
@@ -17,10 +23,6 @@ export function taskSources(data) {
 
 export function sort(data) {
     return $http.post('project/task/sort', data);
-}
-
-export function save(data) {
-    return $http.post('project/task/save', data);
 }
 
 export function edit(data) {

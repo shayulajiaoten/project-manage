@@ -3,8 +3,8 @@ import App from './App.vue'
 import Antd from 'ant-design-vue'
 import router from './router/index'
 import store from './store/index'
-// import vuescroll from 'vuescroll';
-// import 'vuescroll/dist/vuescroll.css';
+import vuescroll from 'vuescroll';
+import 'vuescroll/dist/vuescroll.css';
 import 'ant-design-vue/dist/antd.css'
 import '@/assets/css/theme.less'
 import '@/assets/icon/iconfont'
@@ -27,23 +27,23 @@ Vue.prototype.$destroyNotice = destroyNotice;
 Vue.use(store);
 Vue.use(Antd);
 Vue.component('WrapperContent', WrapperContent);
-// Vue.use(vuescroll);
+Vue.use(vuescroll);
 Vue.config.productionTip = false
 
-// Vue.prototype.$vuescrollConfig = {
-//   vuescroll: {
-//     mode: 'native'
-//   },
-//   scrollPanel: {
-//     scrollingX: true,
-//   },
-//   bar: {
-//     delayTime: 500,
-//     onlyShowBarOnScroll: false,
-//     background: "#cecece",
-//     keepShow: false
-//   }
-// }
+Vue.prototype.$vuescrollConfig = {
+  vuescroll: {
+    mode: 'native'
+  },
+  scrollPanel: {
+    scrollingX: true,
+  },
+  bar: {
+    delayTime: 500,
+    onlyShowBarOnScroll: false,
+    background: "#cecece",
+    keepShow: false
+  }
+}
 Vue.mixin(common);
 new Vue({
   render: h => h(App),

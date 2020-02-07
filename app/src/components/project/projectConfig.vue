@@ -31,11 +31,11 @@
         <div class="content-item">
           <div class="infos">
             <p class="item-title">项目名称</p>
-            <a-input size="large" v-model="project.name"></a-input>
+            <a-input size="large" v-model="project.project_name"></a-input>
           </div>
           <div class="infos">
             <p class="item-title">项目进度 (%)</p>
-            <a-input-number size="large" :min="0" :max="100" v-model="project.schedule"></a-input-number>
+            <a-input-number size="large" :min="0" :max="100" v-model="project.plan"></a-input-number>
           </div>
         </div>
         <div class="content-item">
@@ -189,9 +189,9 @@ export default {
     },
   },
   watch: {
-    // code() {
-    //   this.getProject();
-    // }
+    code() {
+      this.getProject();
+    }
   },
   created() {
     this.getProject();
@@ -202,26 +202,18 @@ export default {
       getProject(this.code).then(res => {
         this.loading = false;
         this.project = res.data;
-        this.project.open_prefix = !!res.data.open_prefix;
-        this.project.open_begin_time = !!res.data.open_begin_time;
-        this.project.open_task_private = !!res.data.open_task_private;
+        // this.project.open_prefix = !!res.data.open_prefix;
+        // this.project.open_begin_time = !!res.data.open_begin_time;
+        // this.project.open_task_private = !!res.data.open_task_private;
       });
     },
     saveProject() {
       const project = this.project;
       doData({
-        projectCode: project.code,
-        name: project.name,
+        projectId: project.id,
+        projectName: project.project_name,
         description: project.description,
-        cover: project.cover,
-        private: project.private,
-        prefix: project.prefix,
-        task_board_theme: project.task_board_theme,
-        open_prefix: Number(project.open_prefix),
-        open_begin_time: Number(project.open_begin_time),
-        open_task_private: Number(project.open_task_private),
-        schedule: Number(project.schedule),
-        auto_update_schedule: Number(project.auto_update_schedule)
+        plan: Number(project.plan),
       }).then(res => {
         if (!checkResponse(res)) {
           return;

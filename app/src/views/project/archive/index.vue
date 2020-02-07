@@ -1,14 +1,6 @@
 <template>
   <div class="project-archive-index">
     <wrapper-content :showHeader="false">
-      <div style="display: flex;justify-content: center">
-        <img
-          style="height: 250px;"
-          src="../../../assets/image/common/nullContent.png"
-          alt
-          v-show="!dataSource.length"
-        />
-      </div>
       <a-list
         class="project-list"
         :loading="loading"
@@ -33,7 +25,7 @@
             </a-tooltip>
           </span>
           <a-list-item-meta :description="item.description">
-            <router-link :to="'/project/space/task/' + item.code" slot="title">{{item.name}}</router-link>
+            <router-link :to="'/project/space/task/' + item.code" slot="title">{{item.project_name}}</router-link>
             <a-avatar slot="avatar" icon="user" :src="item.cover" />
           </a-list-item-meta>
           <div class="other-info muted">

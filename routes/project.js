@@ -3,6 +3,7 @@ const router = express.Router();
 const {
   create_project,
   project_list,
+  all_project_list,
   recycle_list,
   pigeonhole_list,
   recycle_project,
@@ -97,6 +98,29 @@ router.get('/projectList', loginCheck, (req, res, next) => {
   })
 })
 
+// 获得所有项目列表
+router.get('/allProjectList', loginCheck, (req, res, next) => {
+  let teamName
+  const {
+    member_name
+  } = req.session
+  return getMember(member_name).then((data) => {
+    if (data.team) {
+      teamName = data.team
+      const result = all_project_list(teamName, member_name)
+      return result.then((dataList) => {
+        return res.json(
+          new SuccessModel(dataList)
+        )
+      })
+    } else {
+      return res.json(
+        new ErrorModel('当前用户没加入任何团队')
+      )
+    }
+  })
+})
+
 // 获得回收站项目列表
 router.get('/recycleList', loginCheck, (req, res, next) => {
   let teamName
@@ -125,10 +149,13 @@ router.post('/getProject', loginCheck, (req, res, next) => {
   const {
     projectId
   } = req.body
-  const result = get_project(projectId)
-  return result.then((data)=>{
+  const {
+    member_name
+  } = req.session
+  const result = get_project(projectId, member_name)
+  return result.then((data) => {
     return res.json(
-      new SuccessModel(data)
+      new SuccessModel(data[0])
     )
   })
 

@@ -11,7 +11,6 @@
         :dataSource="dataSource"
       >
         <a-list-item slot="renderItem" slot-scope="item,index">
-          
           <span slot="actions" @click="doAction(item,'del',index)">
             <a-tooltip title="移至回收站">
               <a-icon type="delete" />
@@ -33,7 +32,7 @@
           </span>
           <a-list-item-meta :description="item.description">
             <div slot="title">
-              <router-link :to="'/project/space/task/' + item.code">{{item.project_name}}</router-link>
+              <router-link :to="'/project/space/task/' + item.id">{{item.project_name}}</router-link>
             </div>
             <a-avatar slot="avatar" icon="user" :src="item.cover" />
           </a-list-item-meta>
@@ -70,10 +69,7 @@
           />
         </a-form-item>
         <a-form-item>
-          <a-select
-            placeholder="项目模板"
-            v-decorator="['templateCode',]"
-          >
+          <a-select placeholder="项目模板" v-decorator="['templateCode',]">
             <a-select-option :key="0">空白项目</a-select-option>
             <a-select-option :key="template.code" v-for="template in templateList">{{template.name}}</a-select-option>
           </a-select>
@@ -118,7 +114,7 @@ import { selfList, doData, recycle } from "@/api/project";
 // import {checkResponse} from '@/assets/js/utils';
 import pagination from "@/mixins/pagination";
 import moment from "moment";
-import {collect} from "../../../api/projectCollect";
+import { collect } from "../../../api/projectCollect";
 import { list as projectTemplates } from "../../../api/projectTemplate";
 import { list } from "../../../api/department";
 
@@ -157,9 +153,9 @@ export default {
     };
   },
   watch: {
-    $route: function () {
-        this.init();
-    },
+    $route: function() {
+      this.init();
+    }
   },
   created() {
     this.init();
@@ -170,17 +166,17 @@ export default {
     init(reset = true) {
       let app = this;
       if (reset) {
-          this.dataSource = [];
-          this.showLoadingMore = false;
+        this.dataSource = [];
+        this.showLoadingMore = false;
       }
       this.requestData.type = this.$route.params.type;
       app.loading = true;
       console.log(app.requestData.type);
-      
+
       selfList(app.requestData.type).then(res => {
-          app.dataSource = app.dataSource.concat(res.data);
-          app.loading = false;
-          app.loadingMore = false
+        app.dataSource = app.dataSource.concat(res.data);
+        app.loading = false;
+        app.loadingMore = false;
       });
     },
     // projectTemplates() {
@@ -190,8 +186,6 @@ export default {
     // },
 
     doAction(record, action, index) {
-      console.log(record);
-      
       this.currentProject = record;
       this.currentProjectIndex = index;
       let app = this;
@@ -223,27 +217,27 @@ export default {
       } else if (action == "collect") {
         const type = record.collected ? "cancel" : "collect";
         collect(record.id, type).then(() => {
-            app.$set(app.dataSource[index], 'collected', !record.collected);
-            if (this.requestData.type == 'collect') {
-                app.dataSource.splice(index, 1);
-            }
+          app.$set(app.dataSource[index], "collected", !record.collected);
+          if (this.requestData.type == "collect") {
+            app.dataSource.splice(index, 1);
+          }
         });
       }
     },
     updateProject(data) {
-      this.dataSource[this.currentProjectIndex] = JSON.parse(
-        JSON.stringify(data)
+      this.dataSource[this.currentProjectIndex] = Object.assign(
+        this.dataSource[this.currentProjectIndex],
+        data
       );
+    },
+    handleSubmit() {
+      let app = this;
+      app.form.validateFields(err => {
+        if (!err) {
+          app.handleOk();
+        }
+      });
     }
-    // handleSubmit() {
-    //     let app = this;
-    //     app.form.validateFields(
-    //         (err) => {
-    //             if (!err) {
-    //                 app.handleOk();
-    //             }
-    //         })
-    // },
     // handleOk() {
     //     let app = this;
     //     app.actionInfo.confirmLoading = true;
