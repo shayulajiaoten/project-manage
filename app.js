@@ -38,7 +38,7 @@ app.use(session({
   cookie: {
     // path: '/',   // 默认配置
     // httpOnly: true,  // 默认配置
-    maxAge: 24 * 60 * 60 * 1000
+    maxAge: 24 * 60 * 60 * 10000
   },
   store: sessionStore
 }))

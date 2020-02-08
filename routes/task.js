@@ -6,7 +6,10 @@ const {
   change_status,
   delete_subtask,
   task_list,
-  subtask_list
+  subtask_list,
+  assign_task,
+  delete_task,
+  edit_task,
 } = require('../controller/task')
 const {
   SuccessModel,
@@ -24,9 +27,9 @@ router.post('/createTask', (req, res, next) => {
   } = req.body
 
   const result = create_task(projectId, taskName)
-  return result.then(() => {
+  return result.then((data) => {
     return res.json(
-      new SuccessModel('添加项目任务成功')
+      new SuccessModel(data)
     )
   })
 })
@@ -43,7 +46,38 @@ router.post('/taskList', (req, res, next) => {
     )
   })
 })
+// 删除项目对应任务列表
+router.post('/deleteTask', (req, res, next) => {
+  // const {
+  //   member_name
+  // } = req.session
+  const {
+    taskId
+  } = req.body
+  const result = delete_task(taskId)
+  return result.then(() => {
+    return res.json(
+      new SuccessModel('删除成功')
+    )
+  })
+})
 
+// 更改项目对应任务列表名
+router.post('/editTask', (req, res, next) => {
+  // const {
+  //   member_name
+  // } = req.session
+  const {
+    taskName,
+    taskId
+  } = req.body
+  const result = edit_task(taskName,taskId)
+  return result.then(() => {
+    return res.json(
+      new SuccessModel('编辑成功')
+    )
+  })
+})
 // 获得项目任务对应子任务列表
 router.post('/subTaskList', (req, res, next) => {
   const {
@@ -78,12 +112,14 @@ router.post('/createSubtask', (req, res, next) => {
 
 // 修改子任务状态
 router.post('/changeStatus', (req, res, next) => {
-  const username = 'member_name'
+  const {
+    member_name
+  } = req.session
   const {
     status,
     subtaskId
   } = req.body
-  const result = change_status(status, subtaskId, username)
+  const result = change_status(status, subtaskId, member_name)
   return result.then(() => {
     return res.json(
       new SuccessModel('修改状态成功')
@@ -91,11 +127,14 @@ router.post('/changeStatus', (req, res, next) => {
   })
 })
 // 删除子任务
-router.post('/deleteSubtask', () => {
+router.post('/deleteSubtask', (req, res, next) => {
+  const {
+    member_name
+  } = req.session
   const {
     subtaskId
   } = req.body
-  const result = delete_subtask(subtaskId, username)
+  const result = delete_subtask(subtaskId, member_name)
   return result.then(() => {
     return res.json(
       new SuccessModel('删除成功')
@@ -103,4 +142,20 @@ router.post('/deleteSubtask', () => {
   })
 })
 
+// 设置任务执行者
+router.post('/assignTask', (req, res, next) => {
+  const {
+    member_name
+  } = req.session
+  const {
+    subtaskId,
+    executorId
+  } = req.body
+  const result = assign_task(subtaskId, executorId, member_name)
+  return result.then(() => {
+    return res.json(
+      new SuccessModel('设置成功')
+    )
+  })
+})
 module.exports = router;

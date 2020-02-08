@@ -25,7 +25,7 @@
             </a-tooltip>
           </span>
           <a-list-item-meta :description="item.description">
-            <router-link :to="'/project/space/task/' + item.code" slot="title">{{item.project_name}}</router-link>
+            <router-link :to="'/project/space/task/' + item.id" slot="title">{{item.project_name}}</router-link>
             <a-avatar slot="avatar" icon="user" :src="item.cover" />
           </a-list-item-meta>
           <div class="other-info muted">

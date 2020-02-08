@@ -16,14 +16,6 @@
         :dataSource="dataSource"
         :locale="{emptyText:''}"
       >
-        <!-- <div
-          v-if="showLoadingMore"
-          slot="loadMore"
-          :style="{ textAlign: 'center', marginTop: '12px', height: '32px', lineHeight: '32px' }"
-        >
-          <a-spin v-if="loadingMore" />
-          <a-button v-else @click="onLoadMore">查看更多项目</a-button>
-        </div> -->
         <a-list-item slot="renderItem" slot-scope="item,index">
           <span slot="actions">
             <a-tooltip title="恢复项目" @click="doAction(item,'recovery',index)">
@@ -31,7 +23,7 @@
             </a-tooltip>
           </span>
           <a-list-item-meta :description="item.description">
-            <router-link :to="'/project/space/task/' + item.code" slot="title">{{item.project_name}}</router-link>
+            <router-link :to="'/project/space/task/' + item.id" slot="title">{{item.project_name}}</router-link>
             <a-avatar slot="avatar" icon="user" :src="item.cover" />
           </a-list-item-meta>
           <div class="other-info muted">

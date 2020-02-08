@@ -6,6 +6,25 @@ export function save(data) {
     return $http.post('api/task/createSubtask', data);
 }
 
+// 设置任务对应执行者
+export function assignTask(data) {
+    return $http.post('api/task/assignTask', data);
+}
+// 修改子任务状态
+export function taskDone(code, done) {
+    return $http.post('api/task/changeStatus', {
+        subtaskId: code,
+        status: done
+    });
+}
+
+// 删除子任务状态
+export function del(code) {
+    return $http.post('api/task/deleteSubtask', {
+        subtaskId: code
+    });
+}
+
 export function list(data) {
     return $http.post('project/task', data);
 }
@@ -37,39 +56,51 @@ export function setTag(data) {
 }
 
 export function like(code, like) {
-    return $http.post('project/task/like', {like: like, taskCode: code});
+    return $http.post('project/task/like', {
+        like: like,
+        taskCode: code
+    });
 }
 
 export function star(code, star) {
-    return $http.post('project/task/star', {star: star, taskCode: code});
+    return $http.post('project/task/star', {
+        star: star,
+        taskCode: code
+    });
 }
 
 export function createComment(code, comment, mentions) {
-    return $http.post('project/task/createComment', {taskCode: code, comment: comment, mentions: mentions});
+    return $http.post('project/task/createComment', {
+        taskCode: code,
+        comment: comment,
+        mentions: mentions
+    });
 }
 
-export function assignTask(data) {
-    return $http.post('project/task/assignTask', data);
-}
+
 
 export function batchAssignTask(data) {
     return $http.post('project/task/batchAssignTask', data);
 }
 
 export function read(code) {
-    return $http.post('project/task/read', {taskCode: code});
+    return $http.post('project/task/read', {
+        taskCode: code
+    });
 }
 
-export function taskDone(code, done) {
-    return $http.post('project/task/taskDone', {taskCode: code, done: done});
-}
 
 export function setPrivate(code, isPrivate) {
-    return $http.post('project/task/setPrivate', {taskCode: code, private: isPrivate});
+    return $http.post('project/task/setPrivate', {
+        taskCode: code,
+        private: isPrivate
+    });
 }
 
 export function recycle(code) {
-    return $http.post('project/task/recycle', {taskCode: code});
+    return $http.post('project/task/recycle', {
+        taskCode: code
+    });
 }
 
 export function recycleBatch(data) {
@@ -77,12 +108,11 @@ export function recycleBatch(data) {
 }
 
 export function recovery(code) {
-    return $http.post('project/task/recovery', {taskCode: code});
+    return $http.post('project/task/recovery', {
+        taskCode: code
+    });
 }
 
-export function del(code) {
-    return $http.post('project/task/delete', {taskCode: code});
-}
 
 export function dateTotalForProject(data) {
     return $http.post('project/task/dateTotalForProject', data);
@@ -107,4 +137,3 @@ export function editTaskWorkTime(data) {
 export function delTaskWorkTime(data) {
     return $http.post('project/task/delTaskWorkTime', data);
 }
-
