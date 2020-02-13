@@ -28,7 +28,7 @@ const create_project = (projectName, templateId, description, teamName, username
   const select_tempalte_sql = `
     select task_name from template_task_relation
     where
-    template='${templateId}'
+    (template='${templateId}' and deleted=0)
   `
 
   // 验证为团队队长后直接创建项目 
@@ -52,6 +52,8 @@ const create_project = (projectName, templateId, description, teamName, username
                     values
                     ('${d.task_name}','${username}','${project_id}')
                   `
+                  console.log(add_task_sql);
+                  
                   con.query(add_task_sql)
                 })
                 return project_id

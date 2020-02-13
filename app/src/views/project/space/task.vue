@@ -52,14 +52,14 @@
       </div>
     </div>
     <wrapper-content :showHeader="false">
-      <!-- <draggable
+      <draggable
         v-model="taskStages"
         :options="{group:'stages',filter:'.undraggables',handle:'.ui-sortable-handle',ghostClass:'stage-ghost',animation: 200,forceFallback:false}"
         id="board-scrum-stages"
         class="board-scrum-stages"
         :move="stageMove"
         @update="stageSort"
-      > -->
+      >
         <div
           class="scrum-stage"
           v-for="(stage,index) in taskStages"
@@ -112,98 +112,92 @@
               >
                 <a-spin wrapperClassName="tasks-loading" :spinning="stage.tasksLoading">
                   <!--未完成列表-->
-                  <!-- <draggable
-                    v-model="stage.unDoneTasks"
-                    :options="{group:'task',ghostClass:'task-ghost',dragClass:'task-drag',fallbackClass:'task-drag',forceFallback:false}"
-                    @end="taskSort"
-                    class="scrum-stage-tasks"
-                  > -->
-                    <template v-for="(task,taskIndex) in stage.unDoneTasks">
-                      <div
-                        class="task task-card ui-sortable-handle"
-                        :index="taskIndex"
-                        :id="task.id"
-                        :key="task.id"
-                        :class="showTaskPri(task.pri)"
-                        v-if="!task.done"
-                        @click.stop="showModal(task,index,taskIndex)"
-                      >
-                        <div class="task-priority bg-priority-0"></div>
-                        <a-tooltip :placement="index > 0 ? 'top':'right'">
-                          <div
-                            class="check-box-wrapper"
-                            @click.stop="taskDone(task.id,index,taskIndex,1)"
-                          >
-                            <a-icon
-                              class="check-box"
-                              :class="{'disabled': task.hasUnDone}"
-                              type="border"
-                              :style="{fontSize:'16px'}"
+
+                  <template v-for="(task,taskIndex) in stage.unDoneTasks">
+                    <div
+                      class="task task-card ui-sortable-handle"
+                      :index="taskIndex"
+                      :id="task.id"
+                      :key="task.id"
+                      :class="showTaskPri(task.pri)"
+                      v-if="!task.done"
+                      @click.stop="showModal(task,index,taskIndex)"
+                    >
+                      <div class="task-priority bg-priority-0"></div>
+                      <a-tooltip :placement="index > 0 ? 'top':'right'">
+                        <div
+                          class="check-box-wrapper"
+                          @click.stop="taskDone(task.id,index,taskIndex,1)"
+                        >
+                          <a-icon
+                            class="check-box"
+                            :class="{'disabled': task.hasUnDone}"
+                            type="border"
+                            :style="{fontSize:'16px'}"
+                          />
+                        </div>
+                      </a-tooltip>
+                      <div class="task-content-set open-detail">
+                        <div class="task-content-wrapper">
+                          <div class="task-content">{{ task.task_name }}</div>
+                          <a-tooltip placement="top" v-if="task.executor && task.executor.avatar">
+                            <template slot="title">
+                              <span>{{task.executor.name}}</span>
+                            </template>
+                            <img
+                              :src="task.executor.avatar"
+                              :title="task.executor.name"
+                              class="avatar img-circle img-24 hinted"
                             />
-                          </div>
-                        </a-tooltip>
-                        <div class="task-content-set open-detail">
-                          <div class="task-content-wrapper">
-                            <div class="task-content">{{ task.task_name }}</div>
-                            <a-tooltip placement="top" v-if="task.executor && task.executor.avatar">
-                              <template slot="title">
-                                <span>{{task.executor.name}}</span>
-                              </template>
-                              <img
-                                :src="task.executor.avatar"
-                                :title="task.executor.name"
-                                class="avatar img-circle img-24 hinted"
-                              />
-                            </a-tooltip>
-                          </div>
-                          <div class="task-info-wrapper clearfix">
-                            <div class="task-infos">
+                          </a-tooltip>
+                        </div>
+                        <div class="task-info-wrapper clearfix">
+                          <div class="task-infos">
+                            <span
+                              class="label"
+                              :class="showTimeLabel(task.end_time)"
+                              v-if="task.end_time"
+                            >
                               <span
-                                class="label"
-                                :class="showTimeLabel(task.end_time)"
-                                v-if="task.end_time"
-                              >
-                                <span
-                                  :title="task.end_time"
-                                >{{ showTaskTime(task.begin_time,task.end_time)}}</span>
-                              </span>
-                              <span class="icon-wrapper muted" v-if="task.description">
-                                <a-icon type="file-text"></a-icon>
-                              </span>
-                              <span class="icon-wrapper muted" v-if="task.hasSource">
-                                <a-icon type="link"></a-icon>
-                              </span>
-                              <span class="icon-wrapper muted" v-if="task.hasComment">
-                                <a-icon type="message" />
-                              </span>
-                              <!-- <span class="icon-wrapper muted" v-if="task.childCount[0] > 0">
+                                :title="task.end_time"
+                              >{{ showTaskTime(task.begin_time,task.end_time)}}</span>
+                            </span>
+                            <span class="icon-wrapper muted" v-if="task.description">
+                              <a-icon type="file-text"></a-icon>
+                            </span>
+                            <span class="icon-wrapper muted" v-if="task.hasSource">
+                              <a-icon type="link"></a-icon>
+                            </span>
+                            <span class="icon-wrapper muted" v-if="task.hasComment">
+                              <a-icon type="message" />
+                            </span>
+                            <!-- <span class="icon-wrapper muted" v-if="task.childCount[0] > 0">
                                 <a-icon type="bars"></a-icon>
                                 <span>{{task.childCount[1]}}/{{task.childCount[0]}}</span>
-                              </span>-->
-                              <span class="tag muted" v-for="tag in task.tags" :key="tag.code">
-                                <a-badge status="success" :class="`badge-${tag.tag.color}`" />
-                                {{tag.tag.name}}
-                              </span>
-                              <span
-                                :class="'icon-wrapper text text-' + task.task_execute.color"
-                                v-if="task.execute_state > 0"
-                              >{{ task.task_execute_name }}</span>
-                              <span class="icon-wrapper muted" v-if="task.like">
-                                <a-icon type="like" />
-                                <span>{{task.like}}</span>
-                              </span>
-                            </div>
+                            </span>-->
+                            <span class="tag muted" v-for="tag in task.tags" :key="tag.code">
+                              <a-badge status="success" :class="`badge-${tag.tag.color}`" />
+                              {{tag.tag.name}}
+                            </span>
+                            <span
+                              :class="'icon-wrapper text text-' + task.task_execute.color"
+                              v-if="task.execute_state > 0"
+                            >{{ task.task_execute_name }}</span>
+                            <span class="icon-wrapper muted" v-if="task.like">
+                              <a-icon type="like" />
+                              <span>{{task.like}}</span>
+                            </span>
                           </div>
-                          <footer
-                            class="task-info-footer"
-                            v-if="project.prefix && project.open_prefix"
-                          >
-                            <span class="task-id-number">{{project.prefix}}-{{task.id_num}}</span>
-                          </footer>
                         </div>
+                        <footer
+                          class="task-info-footer"
+                          v-if="project.prefix && project.open_prefix"
+                        >
+                          <span class="task-id-number">{{project.prefix}}-{{task.id_num}}</span>
+                        </footer>
                       </div>
-                    </template>
-                  <!-- </draggable> -->
+                    </div>
+                  </template>
                   <!--创建任务卡片-->
                   <div
                     class="task-creator-wrap card"
@@ -224,7 +218,7 @@
                         <a-button
                           type="default"
                           size="large"
-                          class="middle-btn"
+                          class="small-btn"
                           @click.stop="showTaskCard(index,false)"
                         >取消</a-button>
                         <a-button
@@ -232,7 +226,7 @@
                           :disabled="!task.name"
                           type="primary"
                           size="large"
-                          class="middle-btn"
+                          class="small-btn"
                           :class="{'disabled-btn':!task.name}"
                           @click.stop="createTask(stage.id,index)"
                         >创建</a-button>
@@ -240,61 +234,54 @@
                     </form>
                   </div>
                   <!--已完成列表-->
-                  <!-- <draggable
-                    v-model="stage.doneTasks"
-                    :options="{group:'task-done',ghostClass:'task-ghost',dragClass:'task-drag',fallbackClass:'task-drag',forceFallback:false}"
-                    @end="taskSort"
-                    class="scrum-stage-tasks-done"
-                  > -->
-                    <template v-for="(task,taskIndex) in stage.doneTasks">
-                      <div
-                        class="task done task-card ui-sortable-handle"
-                        :index="taskIndex"
-                        :id="task.id"
-                        :key="task.id"
-                        @click.stop="showModal(task,index,taskIndex)"
+                  <template v-for="(task,taskIndex) in stage.doneTasks">
+                    <div
+                      class="task done task-card ui-sortable-handle"
+                      :index="taskIndex"
+                      :id="task.id"
+                      :key="task.id"
+                      @click.stop="showModal(task,index,taskIndex)"
+                    >
+                      <div class="task-priority bg-priority-0"></div>
+                      <span
+                        class="check-box-wrapper"
+                        @click.stop="taskDone(task.id,index,taskIndex,0)"
                       >
-                        <div class="task-priority bg-priority-0"></div>
-                        <span
-                          class="check-box-wrapper"
-                          @click.stop="taskDone(task.id,index,taskIndex,0)"
-                        >
-                          <a-icon
-                            class="check-box"
-                            type="check-square"
-                            :style="{fontSize:'16px'}"
-                            :class="{'disabled': task.hasUnDone}"
-                          />
-                        </span>
-                        <div class="task-content-set open-detail">
-                          <div class="task-content-wrapper">
-                            <div class="task-content">{{ task.task_name }}</div>
-                            <a-tooltip placement="top" v-if="task.executor && task.executor.avatar">
-                              <template slot="title">
-                                <span>{{task.executor.name}}</span>
-                              </template>
-                              <img
-                                v-if="task.executor && task.executor.avatar"
-                                :src="task.executor.avatar"
-                                :title="task.executor.name"
-                                class="avatar img-circle img-24 hinted"
-                              />
-                            </a-tooltip>
-                          </div>
-                          <div class="task-info-wrapper clearfix">
-                            <div class="task-infos">
-                              <span
-                                class="tag muted"
-                                :class="'tag-color-'+ tag.color"
-                                v-for="(tag) in task.task_tag_item_list"
-                                :key="tag.code"
-                              >{{ tag.name }}</span>
-                            </div>
+                        <a-icon
+                          class="check-box"
+                          type="check-square"
+                          :style="{fontSize:'16px'}"
+                          :class="{'disabled': task.hasUnDone}"
+                        />
+                      </span>
+                      <div class="task-content-set open-detail">
+                        <div class="task-content-wrapper">
+                          <div class="task-content">{{ task.task_name }}</div>
+                          <a-tooltip placement="top" v-if="task.executor && task.executor.avatar">
+                            <template slot="title">
+                              <span>{{task.executor.name}}</span>
+                            </template>
+                            <img
+                              v-if="task.executor && task.executor.avatar"
+                              :src="task.executor.avatar"
+                              :title="task.executor.name"
+                              class="avatar img-circle img-24 hinted"
+                            />
+                          </a-tooltip>
+                        </div>
+                        <div class="task-info-wrapper clearfix">
+                          <div class="task-infos">
+                            <span
+                              class="tag muted"
+                              :class="'tag-color-'+ tag.color"
+                              v-for="(tag) in task.task_tag_item_list"
+                              :key="tag.code"
+                            >{{ tag.name }}</span>
                           </div>
                         </div>
                       </div>
-                    </template>
-                  <!-- </draggable> -->
+                    </div>
+                  </template>
                   <!--添加任务按钮-->
                   <div
                     class="task-creator-handler-wrap"
@@ -304,126 +291,6 @@
                     <a class="task-creator-handler link-add-handler">
                       <a-icon type="plus-circle" style="padding-right: 6px;"></a-icon>添加任务
                     </a>
-                  </div>
-                  <!-- 子任务弹窗 -->
-                  <div>
-                    <a-modal
-                      title="任务设置"
-                      :visible="visible"
-                      :confirmLoading="confirmLoading"
-                      @cancel="handleCancel"
-                    >
-                      <template slot="footer">
-                        <a-button type="danger" @click="handleDelete">删除该任务</a-button>
-                        <a-button key="back" @click="handleCancel">返回</a-button>
-                      </template>
-                      <div class="field">
-                        <div class="field-left">
-                          <a-icon type="check-square" />
-                          <span class="field-name">状态</span>
-                        </div>
-                        <div class="field-right">
-                          <a-dropdown
-                            :trigger="['click']"
-                            :disabled="!!task.deleted || !!task.hasUnDone"
-                            :class="{'disabled': task.hasUnDone}"
-                          >
-                            <a-tooltip placement="top">
-                              <span>
-                                <a-tag v-if="currentTask.done" color="green">已完成</a-tag>
-                                <span v-show="!currentTask.done">未完成</span>
-                              </span>
-                            </a-tooltip>
-                            <a-menu
-                              class="field-right-menu"
-                              slot="overlay"
-                              :selectable="false"
-                              @click="changeDone(currentTask.id,stageIndex,currentTaskIndex,!currentTask.done)"
-                            >
-                              <a-menu-item key="done">
-                                <div class="menu-item-content">
-                                  <a-tag color="green">已完成</a-tag>
-                                  <a-icon
-                                    type="check"
-                                    class="check muted"
-                                    v-show="currentTask.done"
-                                  ></a-icon>
-                                </div>
-                              </a-menu-item>
-                              <a-menu-item key="undone">
-                                <div class="menu-item-content">
-                                  <a-tag color="grey">未完成</a-tag>
-                                  <a-icon
-                                    type="check"
-                                    class="check muted"
-                                    v-show="!currentTask.done"
-                                  ></a-icon>
-                                </div>
-                              </a-menu-item>
-                            </a-menu>
-                          </a-dropdown>
-                        </div>
-                      </div>
-                      <div class="field">
-                        <div class="field-left">
-                          <a-icon type="user" />
-                          <span class="field-name">执行者</span>
-                        </div>
-                        <div class="field-right">
-                          <a-dropdown
-                            :trigger="['click']"
-                            v-model="visibleTaskMemberMenu"
-                            :disabled="!!currentTask.deleted"
-                            placement="bottomCenter"
-                            @click.native="tempmth()"
-                          >
-                            <a-tooltip :mouseEnterDelay="0.5" v-if="!currentTask.deleted">
-                              <template slot="title">
-                                <span>点击设置执行者</span>
-                              </template>
-                              <div class="field-flex">
-                                <template v-if="currentTask.executor">
-                                  <a-avatar
-                                    :src="currentTask.executor.avatar"
-                                    icon="user"
-                                    size="small"
-                                  />
-                                  <a class="muted name">{{currentTask.executor.member_name}}</a>
-                                </template>
-                                <template v-if="!currentTask.executor">
-                                  <a-avatar icon="user" size="small" />
-                                  <a class="muted name">待认领</a>
-                                </template>
-                              </div>
-                            </a-tooltip>
-                            <div class="field-flex" v-else>
-                              <template v-if="currentTask.executor">
-                                <a-avatar
-                                  :src="currentTask.executor.avatar"
-                                  icon="user"
-                                  size="small"
-                                />
-                                <a class="muted name">{{currentTask.executor.member_name}}</a>
-                              </template>
-                              <template v-if="!currentTask.executor">
-                                <a-avatar icon="user" size="small" />
-                                <a class="muted name">待认领</a>
-                              </template>
-                            </div>
-                            <div slot="overlay">
-                              <task-member-menu
-                                v-if="visibleTaskMemberMenu"
-                                :teamName="currentTeam"
-                                :executor="currentTask.executor"
-                                :projectCode="currentTask.project_id"
-                                :taskCode="currentTask.id"
-                                @close="changeTask"
-                              ></task-member-menu>
-                            </div>
-                          </a-dropdown>
-                        </div>
-                      </div>
-                    </a-modal>
                   </div>
                 </a-spin>
               </section>
@@ -460,7 +327,7 @@
             </div>
           </header>
         </div>
-      <!-- </draggable> -->
+      </draggable>
       <router-view></router-view>
     </wrapper-content>
     <!--编辑任务列表-->
@@ -560,6 +427,109 @@
         </a-list>
       </div>
     </a-modal>
+    <!-- 子任务弹窗 -->
+    <div>
+      <a-modal
+        title="任务设置"
+        :visible="visible"
+        :confirmLoading="confirmLoading"
+        @cancel="handleCancel"
+      >
+        <template slot="footer">
+          <a-button type="danger" @click="handleDelete">删除该任务</a-button>
+          <a-button key="back" @click="handleCancel">返回</a-button>
+        </template>
+        <div class="field">
+          <div class="field-left">
+            <a-icon type="check-square" />
+            <span class="field-name">状态</span>
+          </div>
+          <div class="field-right">
+            <a-dropdown
+              :trigger="['click']"
+              :disabled="!!task.deleted || !!task.hasUnDone"
+              :class="{'disabled': task.hasUnDone}"
+            >
+              <a-tooltip placement="top">
+                <span>
+                  <a-tag v-if="currentTask.done" color="green">已完成</a-tag>
+                  <span v-show="!currentTask.done">未完成</span>
+                </span>
+              </a-tooltip>
+              <a-menu
+                class="field-right-menu"
+                slot="overlay"
+                :selectable="false"
+                @click="changeDone(currentTask.id,stageIndex,currentTaskIndex,!currentTask.done)"
+              >
+                <a-menu-item key="done">
+                  <div class="menu-item-content">
+                    <a-tag color="green">已完成</a-tag>
+                    <a-icon type="check" class="check muted" v-show="currentTask.done"></a-icon>
+                  </div>
+                </a-menu-item>
+                <a-menu-item key="undone">
+                  <div class="menu-item-content">
+                    <a-tag color="grey">未完成</a-tag>
+                    <a-icon type="check" class="check muted" v-show="!currentTask.done"></a-icon>
+                  </div>
+                </a-menu-item>
+              </a-menu>
+            </a-dropdown>
+          </div>
+        </div>
+        <div class="field">
+          <div class="field-left">
+            <a-icon type="user" />
+            <span class="field-name">执行者</span>
+          </div>
+          <div class="field-right">
+            <a-dropdown
+              :trigger="['click']"
+              v-model="visibleTaskMemberMenu"
+              :disabled="!!currentTask.deleted"
+              placement="bottomCenter"
+            >
+              <a-tooltip :mouseEnterDelay="0.5" v-if="!currentTask.deleted">
+                <template slot="title">
+                  <span>点击设置执行者</span>
+                </template>
+                <div class="field-flex">
+                  <template v-if="currentTask.executor">
+                    <a-avatar :src="currentTask.executor.avatar" icon="user" size="small" />
+                    <a class="muted name">{{currentTask.executor.member_name}}</a>
+                  </template>
+                  <template v-if="!currentTask.executor">
+                    <a-avatar icon="user" size="small" />
+                    <a class="muted name">待认领</a>
+                  </template>
+                </div>
+              </a-tooltip>
+              <div class="field-flex" v-else>
+                <template v-if="currentTask.executor">
+                  <a-avatar :src="currentTask.executor.avatar" icon="user" size="small" />
+                  <a class="muted name">{{currentTask.executor.member_name}}</a>
+                </template>
+                <template v-if="!currentTask.executor">
+                  <a-avatar icon="user" size="small" />
+                  <a class="muted name">待认领</a>
+                </template>
+              </div>
+              <div slot="overlay">
+                <task-member-menu
+                  v-if="visibleTaskMemberMenu"
+                  :teamName="currentTeam"
+                  :executor="currentTask.executor"
+                  :projectCode="currentTask.project_id"
+                  :taskCode="currentTask.id"
+                  @close="changeTask"
+                ></task-member-menu>
+              </div>
+            </a-dropdown>
+          </div>
+        </div>
+      </a-modal>
+    </div>
   </div>
 </template>
 
@@ -567,7 +537,7 @@
 import { mapState } from "vuex";
 import _ from "lodash";
 import moment from "moment";
-// import draggable from "vuedraggable";
+import draggable from "vuedraggable";
 import projectSelect from "@/components/project/projectSelect";
 import projectConfig from "@/components/project/projectConfig";
 import TaskTag from "@/components/project/taskTag";
@@ -607,7 +577,7 @@ export default {
   name: "project-space-task",
   components: {
     TaskTag,
-    // draggable,
+    draggable,
     projectSelect,
     projectConfig,
     taskMemberMenu
@@ -615,9 +585,8 @@ export default {
   data() {
     return {
       visibleTaskMemberMenu: false,
-      temp: false,
       /*成员菜单*/
-      currentTaskDone:0, // 当前任务完成状态
+      currentTaskDone: 0, // 当前任务完成状态
       stageIndex: undefined, // 当前选中列index
       currentTaskIndex: undefined, // 当前选中任务index
       code: this.$route.params.code, // 当前projectId
@@ -702,7 +671,7 @@ export default {
     $route(to, from) {
       if (this.code != to.params.id) {
         this.code = to.params.code;
-        
+
         this.getProject();
         this.init();
       }
@@ -732,14 +701,10 @@ export default {
     }
   },
   created() {
-    
     this.getProject();
     this.init();
   },
   methods: {
-    tempmth() {
-      this.temp = true;
-    },
     init() {
       this.getTaskStages();
     },
@@ -748,17 +713,16 @@ export default {
       this.visible = true;
       this.stageIndex = index;
       this.currentTaskIndex = taskIndex;
-      this.currentTaskDone = task.done
+      this.currentTaskDone = task.done;
     },
     handleCancel(e) {
       this.visible = false;
     },
     // 删除子任务
-    handleDelete(e){
-       this.visible = false;
-       delTask(this.currentTask.id)
-       this.init();
-       
+    handleDelete(e) {
+      this.visible = false;
+      delTask(this.currentTask.id);
+      this.init();
     },
     // 获得项目信息
     getProject() {
@@ -1068,8 +1032,8 @@ export default {
     },
     taskDetail(code, stageIndex) {},
     stageMove(evt) {
-      this.preCode = evt.draggedContext.element.code;
-      this.nextCode = evt.relatedContext.element.code;
+      this.preCode = evt.draggedContext.element.id;
+      this.nextCode = evt.relatedContext.element.id;
     },
     stageSort() {
       sort(this.preCode, this.nextCode, this.code);
@@ -1134,6 +1098,9 @@ export default {
 
 <style lang="less">
 @import "../../../assets/css/components/task";
+.ant-modal-mask {
+  background-color: rgba(0, 0, 0, 0.25);
+}
 
 .project-space-task {
   .tasks-loading {

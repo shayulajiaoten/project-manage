@@ -1,15 +1,12 @@
 export default {
-    SET_LOGGED(state, {tokenList, userInfo}) {
-        state.logged = true;
-        state.userInfo = userInfo;
-    },
-    SET_USER(state, data) {
-        state.userInfo = data;
-    },
-    SET_LOGOUT(state) {
-        state.logged = false;
-        state.userInfo = null;
-    },
+    // SET_LOGGED(state, {tokenList, userInfo}) {
+    //     state.logged = true;
+    //     state.userInfo = userInfo;
+    // },
+    // SET_USER(state, data) {
+    //     state.userInfo = data;
+    // },
+    
     setTheme(state, theme) {
         state.theme = theme
     },

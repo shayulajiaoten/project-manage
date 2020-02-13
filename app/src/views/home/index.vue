@@ -10,13 +10,13 @@
       <div class="header-content">
         <div class="left-content">
           <div class="avatar">
-            <a-avatar :size="64" :src="userInfo.avatar">{{userInfo.name}}</a-avatar>
+            <a-avatar :size="64" :src="userInfo.avatar">{{userInfo.member_name}}</a-avatar>
           </div>
           <div class="user-info">
-            <div class="title">{{helloTime}}{{ userInfo.name }}，祝你开心每一天！</div>
-            <div class="team muted" v-if="userInfo.position">
-              {{userInfo.position}}
-              <template v-if="userInfo.department">| {{ userInfo.department }}</template>
+            <div class="title">{{helloTime}}{{ userInfo.member_name }}，祝你开心每一天！</div>
+            
+            <div class="team muted">
+              <template v-if="userInfo.team">{{ userInfo.team }}</template>
             </div>
           </div>
         </div>
@@ -54,19 +54,19 @@
                 <a-card
                   :bordered="false"
                   :body-style="{ padding: 0 }"
-                  @click="routerLink('/project/space/task/' + item.code)"
+                  @click="routerLink('/project/space/task/' + item.id)"
                 >
                   <a-card-meta>
                     <div slot="title" class="card-title">
                       <a-avatar size="small" :src="item.cover" />
-                      <router-link :to="'/project/space/task/' + item.code">
+                      <router-link :to="'/project/space/task/' + item.id">
                         <a-icon
                           type="star"
                           theme="filled"
                           style="color: #ffaf38;margin-right: 6px;"
                           v-show="item.collected"
                         />
-                        {{ item.name }}
+                        {{ item.project_name }}
                       </router-link>
                     </div>
                     <div slot="description" class="card-description">
@@ -86,7 +86,7 @@
                     </div>
                   </a-card-meta>
                   <div class="project-item">
-                    <a href="/#/">{{ item.owner_name }}</a>
+                    <a href="/#/home">{{ item.creator }}</a>
                     <span class="datetime">{{ formatTime(item.create_time) }}</span>
                   </div>
                 </a-card>
@@ -106,25 +106,82 @@
             <a-list>
               <a-list-item :key="index" v-for="(item, index) in tasks">
                 <a-list-item-meta>
-                  <div slot="title">
-                    <router-link
-                      target="_blank"
-                      :to="`/project/space/task/${item.projectInfo.code}/detail/${item.code}`"
-                    >{{ item.name }}</router-link>
-                  </div>
+                  <div slot="title">{{ item.task_name }}</div>
                   <div slot="description">
-                    <span
-                      class="label m-r-xs"
-                      :class="showTimeLabel(item.end_time)"
-                      v-if="item.end_time"
-                    >{{showTaskTime(item.begin_time, item.end_time)}}</span>
                     <router-link
                       target="_blank"
                       class="muted"
-                      :to="'/project/space/task/' + item.projectInfo.code"
-                    >{{ item.projectInfo.name }}</router-link>
+                      :to="'/project/space/task/' + item.projectInfo.id"
+                    >{{ item.projectInfo.project_name }}</router-link>
                   </div>
                 </a-list-item-meta>
+              </a-list-item>
+            </a-list>
+          </a-card>
+        </a-col>
+      </a-row>
+      <a-row :gutter="24">
+        <a-col style="padding: 0 12px" :xl="8" :lg="24" :md="24" :sm="24" :xs="24" v-show="userInfo.is_team_leader">
+          <a-card
+            class="tasks-list"
+            :title="`项目申请`"
+            style="margin-bottom: 24px"
+            :bordered="false"
+            :loading="loading"
+          >
+            <a-list>
+              <a-list-item
+                v-show="!item.resolve"
+                :key="index"
+                v-for="(item, index) in projectCreateList"
+              >
+                <a-list-item-meta>
+                  <div slot="title">{{ item.project_name }}</div>
+                </a-list-item-meta>
+                <a-button
+                  type="danger "
+                  style="margin-right:10px"
+                  ghost
+                  @click="editProjectStatus(item,0)"
+                >
+                  <a-icon type="close" />拒绝
+                </a-button>
+                <a-button type="primary" ghost @click="editProjectStatus(item,1)">
+                  <a-icon type="check" />允许
+                </a-button>
+              </a-list-item>
+            </a-list>
+          </a-card>
+        </a-col>
+        <a-col style="padding: 0 12px" :xl="8" :lg="24" :md="24" :sm="24" :xs="24" v-show="userInfo.super_leader">
+          <a-card
+            class="tasks-list"
+            :title="`团队申请`"
+            style="margin-bottom: 24px"
+            :bordered="false"
+            :loading="loading"
+          >
+            <a-list>
+              <a-list-item
+                v-show="!item.resolve"
+                :key="index"
+                v-for="(item, index) in teamCreateList"
+              >
+                <a-list-item-meta>
+                  <div slot="title">{{ item.team }}</div>
+                </a-list-item-meta>
+
+                <a-button
+                  type="danger "
+                  style="margin-right:10px"
+                  ghost
+                  @click="editTeamStatus(item,0)"
+                >
+                  <a-icon type="close" />拒绝
+                </a-button>
+                <a-button type="primary" ghost @click="editTeamStatus(item,1)">
+                  <a-icon type="check" />允许
+                </a-button>
               </a-list-item>
             </a-list>
           </a-card>
@@ -135,18 +192,23 @@
   </div>
 </template>
 <script>
-// import {mapState} from 'vuex'
-// import moment from "moment";
+import { mapState } from "vuex";
+import moment from "moment";
 import { getYiYan } from "../../api/other";
 import {
   formatTaskTime,
   relativelyTime,
-  showHelloTime
+  showHelloTime,
+  relativelyTaskTime
 } from "../../assets/js/dateTime";
-import {selfList as getProjectList} from "../../api/project";
-// import {list as accountList} from "../../api/user";
+import { selfList as getProjectList } from "../../api/project";
 import pagination from "../../mixins/pagination";
-// import {getLogBySelfProject, selfList} from "../../api/task";
+import {
+  resolveList,
+  editTeamStatus,
+  editProjectStatus
+} from "../../api/system";
+import { getLogBySelfProject, selfList } from "../../api/task";
 
 export default {
   name: "Home",
@@ -154,7 +216,8 @@ export default {
   mixins: [pagination],
   data() {
     return {
-      userInfo: [],
+      teamCreateList: [], // 团队申请
+      projectCreateList: [], // 项目申请
       loading: false,
       yiyan: {},
       projectList: [],
@@ -166,10 +229,9 @@ export default {
     };
   },
   computed: {
-    // ...mapState({
-    //     userInfo: state => state.userInfo,
-    //     socketAction: state => state.socketAction,
-    // }),
+    ...mapState({
+      userInfo: state => state.user.userInfo
+    }),
     helloTime() {
       return showHelloTime();
     }
@@ -178,52 +240,56 @@ export default {
     this.getYiYan();
     this.init();
   },
-  // watch:{
-  //     socketAction(val) {
-  //         console.log(val);
-  //         if (val.action === 'organization:task') {
-  //             this.init(false, false);
-  //         }
-  //     },
-  // },
   methods: {
+    // 项目申请处理
+    editProjectStatus(item, status) {
+      let requestData = {};
+      requestData.id = item.id;
+      requestData.status = status;
+      editProjectStatus(requestData).then(() => {
+        item.resolve = 1;
+      });
+    },
+    // 团队申请处理
+    editTeamStatus(item, status) {
+      let requestData = {};
+      requestData.id = item.id;
+      requestData.status = status;
+      editTeamStatus(requestData).then(() => {
+        item.resolve = 1;
+      });
+    },
     init(reset = true, loading = true) {
+      resolveList().then(res => {
+        this.teamCreateList = res.data[1];
+        this.projectCreateList = res.data[0];
+      });
       if (reset) {
         this.projectList = [];
         this.pagination.page = 1;
         this.pagination.pageSize = 9;
       }
       this.getProjectList(loading);
-      // this.getTasks();
-      // this.getTaskLog();
-      // this.getAccountList();
+      this.getTasks();
     },
     getProjectList(loading) {
       if (loading) {
         this.loading = true;
       }
-      getProjectList(this.requestData).then(res => {
-        // this.projectList = res.data.list;
-        // this.projectTotal = res.data.total;
+
+      getProjectList("all").then(res => {
+        this.projectList = res.data;
+        this.projectTotal = res.data.length;
         this.loading = false;
       });
     },
-    //     getTasks() {
-    //         selfList({page: 1, pageSize: 10}).then(res => {
-    //             this.tasks = res.data.list;
-    //             this.tasksTotal = res.data.total;
-    //         })
-    //     },
-    //     getTaskLog() {
-    //         getLogBySelfProject().then(res => {
-    //             this.activities = res.data;
-    //         })
-    //     },
-    //     getAccountList() {
-    //         accountList().then(res => {
-    //             this.accounts = res.data.list;
-    //         })
-    //     },
+    getTasks() {
+      selfList().then(res => {
+        this.tasks = res.data;
+        this.tasksTotal = res.data.length;
+      });
+    },
+
     getYiYan() {
       let app = this;
       getYiYan(function(data) {

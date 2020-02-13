@@ -10,11 +10,16 @@ const {
   assign_task,
   delete_task,
   edit_task,
+  sort_task_list,
+  my_task_list,
 } = require('../controller/task')
 const {
   SuccessModel,
   ErrorModel
 } = require('../model/resModel')
+const {
+  getMember
+} = require('../controller/common')
 // const {
 //   member_name
 // } = req.session
@@ -71,7 +76,7 @@ router.post('/editTask', (req, res, next) => {
     taskName,
     taskId
   } = req.body
-  const result = edit_task(taskName,taskId)
+  const result = edit_task(taskName, taskId)
   return result.then(() => {
     return res.json(
       new SuccessModel('编辑成功')
@@ -155,6 +160,33 @@ router.post('/assignTask', (req, res, next) => {
   return result.then(() => {
     return res.json(
       new SuccessModel('设置成功')
+    )
+  })
+})
+
+// 交换任务列表id
+router.post('/sortTaskList', (req, res, next) => {
+  const {
+    preId,
+    nextId
+  } = req.body
+  const result = sort_task_list(preId, nextId)
+  return result.then(() => {
+    return res.json(
+      new SuccessModel('设置成功')
+    )
+  })
+})
+
+// 当前用户任务列表
+router.post('/myTaskList', (req, res, next) => {
+  const {
+    member_id
+  } = req.session
+  const result = my_task_list(member_id)
+  return result.then((dataList) => {
+    return res.json(
+      new SuccessModel(dataList)
     )
   })
 })

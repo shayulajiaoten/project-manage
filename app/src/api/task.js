@@ -24,7 +24,10 @@ export function del(code) {
         subtaskId: code
     });
 }
-
+// 当前用户任务列表
+export function selfList(data) {
+    return $http.post('api/task/myTaskList', data);
+}
 export function list(data) {
     return $http.post('project/task', data);
 }
@@ -32,9 +35,7 @@ export function getListByTaskTag(data) {
     return $http.post('project/task/getListByTaskTag', data);
 }
 
-export function selfList(data) {
-    return $http.post('project/task/selfList', data);
-}
+
 
 export function taskSources(data) {
     return $http.post('project/task/taskSources', data);

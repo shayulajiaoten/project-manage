@@ -1,16 +1,17 @@
 import $http from '@/assets/js/http'
 
+// 模板任务列表
 export function list(data) {
-    return $http.post('project/task_stages_template', data);
+    return $http.post('api/template/templateTaskList', data);
 }
-
+// 添加、修改模板任务
 export function doData(data) {
-    let url = 'project/task_stages_template/save';
-    if (data.code) {
-        url = 'project/task_stages_template/edit';
+    let url = 'api/template/addTemplateTask';
+    if (data.id) {
+        url = 'api/template/editTemplateTask';
     }
     return $http.post(url, data);
 }
 export function del(code) {
-    return $http.post('project/task_stages_template/delete', {code: code});
+    return $http.post('api/template/delTemplateTask', {id: code});
 }

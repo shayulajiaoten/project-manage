@@ -26,10 +26,11 @@ export function del(code) {
 export function edit(data) {
     return $http.post('api/task/editTask', data);
 }
+// 任务列表id交换
 export function sort(preCode, nextCode, projectCode) {
-    return $http.post('project/task_stages/sort', {
-        preCode: preCode,
-        nextCode: nextCode,
-        projectCode: projectCode
+    return $http.post('api/task/sortTaskList', {
+        preId: preCode,
+        nextId: nextCode,
+        projectId: projectCode
     });
 }

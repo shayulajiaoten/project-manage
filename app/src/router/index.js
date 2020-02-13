@@ -3,6 +3,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '@/views/index'
 import Home from './home';
+import TaskStages from '../views/project/template/taskStages'
 // import {
 //   getStore,
 //   // setStore
@@ -185,26 +186,25 @@ const menu = [{
         innerText: "导航",
         fullUrl: "#",
         children: [{
-            id: "157",
-            pid: 156,
-            title: "项目模板",
-            icon: "",
-            url: "project/template",
-            file_path: "project/template",
-            params: "",
-            node: "project/project_template/index",
-            sort: 0,
-            status: 1,
-            create_by: 0,
-            create_at: "0000-00-00 00:00:00",
-            is_inner: false,
-            values: "",
-            show_slider: 1,
-            statusText: "使用中",
-            innerText: "导航",
-            fullUrl: "project/template"
-          },
-        ]
+          id: "157",
+          pid: 156,
+          title: "项目模板",
+          icon: "",
+          url: "project/template",
+          file_path: "project/template",
+          params: "",
+          node: "project/project_template/index",
+          sort: 0,
+          status: 1,
+          create_by: 0,
+          create_at: "0000-00-00 00:00:00",
+          is_inner: false,
+          values: "",
+          show_slider: 1,
+          statusText: "使用中",
+          innerText: "导航",
+          fullUrl: "project/template"
+        }, ]
       }
     ]
   },
@@ -288,6 +288,85 @@ const menu = [{
         }
       ]
     }]
+  }, 
+  {
+    id: "124",
+    pid: 0,
+    title: "系统设置",
+    icon: "setting",
+    url: "#",
+    file_path: "#",
+    params: "",
+    node: "#",
+    sort: 100,
+    status: 1,
+    create_by: 0,
+    create_at: "0000-00-00 00:00:00",
+    is_inner: false,
+    values: "",
+    show_slider: 1,
+    statusText: "使用中",
+    innerText: "导航",
+    fullUrl: "#",
+    children: [{
+      id: "148",
+      pid: 124,
+      title: "个人管理",
+      icon: "user",
+      url: "#",
+      file_path: "#",
+      params: "",
+      node: "#",
+      sort: 0,
+      status: 1,
+      create_by: 0,
+      create_at: "0000-00-00 00:00:00",
+      is_inner: false,
+      values: "",
+      show_slider: 1,
+      statusText: "使用中",
+      innerText: "导航",
+      fullUrl: "#",
+      children: [{
+        id: "149",
+        pid: 148,
+        title: "个人设置",
+        icon: "",
+        url: "account/setting/base",
+        file_path: "account/setting/base",
+        params: "",
+        node: "project/index/editpersonal",
+        sort: 0,
+        status: 1,
+        create_by: 0,
+        create_at: "0000-00-00 00:00:00",
+        is_inner: false,
+        values: "",
+        show_slider: 1,
+        statusText: "使用中",
+        innerText: "导航",
+        fullUrl: "account/setting/base"
+      }, {
+        id: "150",
+        pid: 148,
+        title: "安全设置",
+        icon: "",
+        url: "account/setting/security",
+        file_path: "account/setting/security",
+        params: "",
+        node: "project/index/editpersonal",
+        sort: 0,
+        status: 1,
+        create_by: 0,
+        create_at: "0000-00-00 00:00:00",
+        is_inner: true,
+        values: "",
+        show_slider: 1,
+        statusText: "使用中",
+        innerText: "内页",
+        fullUrl: "account/setting/security"
+      }]
+    }]
   }
 ]
 if (menu) {
@@ -344,106 +423,15 @@ const router = new Router({
             model: 'Login'
           },
         },
-        // {
-        //     path: 'register-result',
-        //     name: 'registerResult',
-        //     component: () => import(/* webpackChunkName: "user" */ '@/views/member/RegisterResult')
-        // }
       ]
     },
-    // {
-    //   name: 'install',
-    //   path: '/install',
-    //   component: resolve => require(['@/views/error/install'], resolve),
-    //   meta: {
-    //     model: 'error'
-    //   },
-    // },
-    // {
-    //   name: 'resetEmail',
-    //   path: '/reset/email',
-    //   component: resolve => require(['@/views/reset/email'], resolve),
-    //   meta: {
-    //     model: 'error'
-    //   },
-    // },
-    // {
-    //   name: '404',
-    //   path: '/404',
-    //   component: resolve => require(['@/views/error/404'], resolve),
-    //   meta: {
-    //     model: 'error'
-    //   },
-    // },
-    // {
-    //   name: '403',
-    //   path: '/403',
-    //   component: resolve => require(['@/views/error/403'], resolve),
-    //   meta: {
-    //     model: 'error'
-    //   },
-    // },
-    // {
-    //   name: '500',
-    //   path: '/500',
-    //   component: resolve => require(['@/views/error/500'], resolve),
-    //   meta: {
-    //     model: 'error'
-    //   },
-    // },
+    {
+      path: '/project/template/taskstages/:id',
+      name: 'taskStages',
+      component: TaskStages,
+    },
   ]
 });
 
-// router.beforeEach((to, from, next) => {
-//   console.log(to);
-//   let tokenList = getStore('tokenList', true);
-//   if (tokenList) {
-//     let refreshToken = tokenList.refreshToken;
-//     let accessTokenExp = tokenList.accessTokenExp;
-//     //判断accessToken即将到期后刷新token
-//     if (accessTokenExp && isTokenExpired(accessTokenExp)) {
-//       refreshAccessToken(refreshToken).then(res => {
-//         tokenList.accessToken = res.data.accessToken;
-//         tokenList.accessTokenExp = res.data.accessTokenExp;
-//         setStore('tokenList', tokenList);
-//       });
-//     }
-//   }
-//   const HOME_PAGE = config.HOME_PAGE;
-//   //页面中转
-//   if (to.name === 'index' || to.path === '/index' || to.path === '/') {
-//     next({
-//       path: HOME_PAGE
-//     });
-//     return false;
-//   }
-//   //无效页面跳转至首页
-//   if (!to.name && from.meta.model !== 'Login' && to.path !== HOME_PAGE) {
-//     next({
-//       path: '/404'
-//     });
-//     return false;
-//   }
-//   if (to.meta.model === 'Login' && store.state.logged) {
-//     next({
-//       path: HOME_PAGE
-//     });
-//     return false;
-//   }
-//   if (!store.state.logged && to.meta.model !== 'Login' && to.meta.model !== 'error') {
-//     next({
-//       name: 'login',
-//       query: {
-//         redirect: to.fullPath
-//       }
-//     });
-//     return false;
-//   }
-//   next();
-// });
-// router.afterEach(route => {
-//   //预留
-//   // window.scrollTo(0,0)
-// });
 
 export default router

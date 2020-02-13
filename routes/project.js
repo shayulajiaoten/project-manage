@@ -26,27 +26,29 @@ const {
   getMember
 } = require('../controller/common')
 // const {
-//   username
+//   member_name
 // } = req.session
 
 
 // 创建项目申请(队长直接创建，成员需向队长申请项目)
 router.post('/createProject', loginCheck, (req, res, next) => {
   let {
-    projectName, // 项目名
+    name, // 项目名
     templateId, // 模板id
     description, // 项目简介
   } = req.body
 
-  const username = 'member_name'
+  const {
+    member_name
+  } = req.session
   if (!templateId) {
     templateId = 0
   }
   let teamName
-  return getMember(username).then((data) => {
+  return getMember(member_name).then((data) => {
     if (data.team) {
       teamName = data.team
-      const result = create_project(projectName, templateId, description, teamName, username)
+      const result = create_project(name, templateId, description, teamName, member_name)
       return result.then((data) => {
         switch (data) {
           case 1:

@@ -5,13 +5,18 @@ const {
   register,
   question,
   changePassword,
+  edit_personal,
+  edit_password,
+  edit_email,
 } = require('../controller/user')
 const {
   SuccessModel,
   ErrorModel
 } = require('../model/resModel')
-
-
+const loginCheck = require('../middleware/loginCheck')
+const {
+  getMember
+} = require('../controller/common')
 
 // 登录路由
 router.post('/login', (req, res, next) => {
@@ -26,6 +31,7 @@ router.post('/login', (req, res, next) => {
     if (data.member_name) {
       // 设置 session
       req.session.member_name = data.member_name
+      req.session.member_id = data.id
       res.json(
         new SuccessModel('登录成功')
       )
@@ -85,6 +91,7 @@ router.post('/getQuestion', (req, res, next) => {
   })
 })
 
+// 修改密码（未登录）
 router.post('/changePassword', (req, res, next) => {
   const {
     id,
@@ -94,7 +101,7 @@ router.post('/changePassword', (req, res, next) => {
 
   const result = changePassword(id, password, answer)
   return result.then(data => {
-    if(data) {
+    if (data) {
       res.json(
         new SuccessModel('密码修改成功')
       )
@@ -106,4 +113,73 @@ router.post('/changePassword', (req, res, next) => {
   })
 })
 
+// 修改密码（已登录）
+router.post('/editPassword', (req, res, next) => {
+  const {
+    id,
+    password,
+    newPassword
+  } = req.body
+
+  const result = edit_password(id, password, newPassword)
+  return result.then(data => {
+    if (data) {
+      res.json(
+        new SuccessModel('密码修改成功')
+      )
+    } else {
+      res.json(
+        new ErrorModel('原密码错误')
+      )
+    }
+  })
+})
+// 当前用户信息
+router.get('/message', loginCheck, (req, res, next) => {
+  const {
+    member_name
+  } = req.session
+  return getMember(member_name).then((data) => {
+    return res.json(
+      new SuccessModel(data)
+    )
+  })
+})
+
+// 修改账户信息
+router.post('/editPersonal', (req, res, next) => {
+  const {
+    nickname,
+    description,
+    id,
+  } = req.body
+
+  const result = edit_personal(nickname, description, id)
+  return result.then(() => {
+    res.json(
+      new SuccessModel('修改成功')
+    )
+  })
+});
+
+// 修改邮箱
+router.post('/editEmail', (req, res, next) => {
+  const {
+    email,
+    id,
+  } = req.body
+
+  const result = edit_email(email, id)
+  return result.then((data) => {
+    if (data) {
+      res.json(
+        new SuccessModel('修改成功')
+      )
+    } else {
+      res.json(
+        new ErrorModel('该邮箱已经绑定账户')
+      )
+    }
+  })
+});
 module.exports = router;

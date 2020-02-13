@@ -17,12 +17,5 @@ export default [
                 meta: {model: 'Project', info: {show_slider: false}},
             },
         ]
-    },
-    // {
-    //     //邀请链接
-    //     name: 'inviteFromLink',
-    //     path: '/invite_from_link/:code',
-    //     component: resolve => require(['@/views/common/inviteFromLink'], resolve),
-    //     meta: {model: 'Common', info: {show_slider: false}},
-    // },
+    }
 ];

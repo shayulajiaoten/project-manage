@@ -150,6 +150,84 @@ const assign_task = (subtaskId, executorId, member_name) => {
   return exec(change_sql)
 }
 
+// 交换任务列表id
+const sort_task_list = (preId, nextId) => {
+  const update_temp_sql = `
+    update project_task_relation
+    set
+    id=-2
+    where
+    id ='${nextId}'
+  `
+  const update_pre_sql = `
+    update project_task_relation
+    set
+    id='${nextId}'
+    where
+    id = '${preId}'
+  `
+  const update_next_sql = `
+    update project_task_relation
+    set
+    id='${preId}'
+    where
+    id = -2
+  `
+  const update_task_temp_sql = `
+    update task_sontask_relation
+    set
+    id=-2
+    where
+    task_list_id ='${nextId}'
+  `
+  const update_task_pre_sql = `
+    update task_sontask_relation
+    set
+    id='${nextId}'
+    where
+    task_list_id = '${preId}'
+  `
+  const update_task_next_sql = `
+    update task_sontask_relation
+    set
+    id='${preId}'
+    where
+    task_list_id = -2
+  `
+  console.log(update_temp_sql, update_pre_sql, update_next_sql);
+
+  return exec(update_temp_sql)
+    .then(exec(update_pre_sql)
+      .then(exec(update_next_sql)
+        .then(exec(update_task_temp_sql)
+          .then(exec(update_task_pre_sql)
+            .then(exec(update_task_next_sql))
+          )
+        )
+      )
+    )
+}
+
+// 当前用户任务列表
+const my_task_list = (id) => {
+  const select_sql = `
+    select *From task_sontask_relation where (executor_id='${id}' and deleted=0 and done=0)
+  `
+  return exec(select_sql).then((dataList) => {
+     const promise = dataList.map((data) => {
+      const select_sql = `
+        select *from system_project where id='${data.project_id}'
+      `
+      return exec(select_sql).then((res) => {
+        return Object.assign(data, {
+          projectInfo: res[0]
+        })
+      })
+    })
+    const result = Promise.all(promise)
+    return result
+  })
+}
 module.exports = {
   create_task,
   create_subtask,
@@ -160,4 +238,6 @@ module.exports = {
   assign_task,
   delete_task,
   edit_task,
+  sort_task_list,
+  my_task_list,
 }

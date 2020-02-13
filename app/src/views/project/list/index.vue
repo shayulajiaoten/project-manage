@@ -69,9 +69,12 @@
           />
         </a-form-item>
         <a-form-item>
-          <a-select placeholder="项目模板" v-decorator="['templateCode',]">
-            <a-select-option :key="0">空白项目</a-select-option>
-            <a-select-option :key="template.code" v-for="template in templateList">{{template.name}}</a-select-option>
+          <a-select placeholder="项目模板" v-decorator="['templateId',]">
+            <a-select-option :key="-1">空白项目</a-select-option>
+            <a-select-option
+              :key="template.id"
+              v-for="template in templateList"
+            >{{template.template_name}}</a-select-option>
           </a-select>
         </a-form-item>
         <a-form-item>
@@ -111,7 +114,7 @@
 <script>
 import projectConfig from "@/components/project/projectConfig";
 import { selfList, doData, recycle } from "@/api/project";
-// import {checkResponse} from '@/assets/js/utils';
+import {checkResponse} from '@/assets/js/utils';
 import pagination from "@/mixins/pagination";
 import moment from "moment";
 import { collect } from "../../../api/projectCollect";
@@ -159,7 +162,7 @@ export default {
   },
   created() {
     this.init();
-    // this.projectTemplates();
+    this.projectTemplates();
   },
   methods: {
     moment,
@@ -179,11 +182,11 @@ export default {
         app.loadingMore = false;
       });
     },
-    // projectTemplates() {
-    //     projectTemplates({pageSize: 100, viewType: -1}).then(res => {
-    //         this.templateList = res.data.list;
-    //     });
-    // },
+    projectTemplates() {
+      projectTemplates({ viewType: -1 }).then(res => {
+        this.templateList = res.data;
+      });
+    },
 
     doAction(record, action, index) {
       this.currentProject = record;
@@ -237,45 +240,30 @@ export default {
           app.handleOk();
         }
       });
+    },
+    handleOk() {
+      let app = this;
+      app.actionInfo.confirmLoading = true;
+      let obj = app.form.getFieldsValue();
+      if (app.newData.id) {
+        //编辑
+        obj.projectCode = app.newData.id;
+      } else {
+        //新增
+        Object.assign(obj, app.newData);
+      }
+
+      doData(obj).then(res => {
+        app.actionInfo.confirmLoading = false;
+        if (!checkResponse(res)) {
+          return;
+        }
+        app.form.resetFields();
+        app.newData = { id: 0 };
+        app.actionInfo.modalStatus = false;
+        app.init();
+      });
     }
-    // handleOk() {
-    //     let app = this;
-    //     app.actionInfo.confirmLoading = true;
-    //     let obj = app.form.getFieldsValue();
-    //     if (app.newData.code) {
-    //         //编辑
-    //         obj.projectCode = app.newData.code;
-    //     } else {
-    //         //新增
-    //         Object.assign(obj, app.newData);
-    //     }
-
-    //     doData(obj).then(res => {
-    //         app.actionInfo.confirmLoading = false;
-    //         if (!checkResponse(res)) {
-    //             return;
-    //         }
-    //         app.form.resetFields();
-    //         app.newData = {id: 0};
-    //         app.actionInfo.modalStatus = false;
-    //         app.init();
-
-    //     });
-    // },
-    // handleSearchSubmit() {
-    //     let app = this;
-    //     app.searchForm.validateFields(
-    //         (err) => {
-    //             if (!err) {
-    //                 app.search();
-    //             }
-    //         })
-    // },
-    // search() {
-    //     let obj = this.searchForm.getFieldsValue();
-    //     Object.assign(this.requestData, obj);
-    //     this.init();
-    // },
   }
 };
 </script>

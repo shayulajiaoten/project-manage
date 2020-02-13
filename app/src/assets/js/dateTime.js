@@ -55,20 +55,20 @@ export const relativelyTime = (value, now) => {
     const currentMonday = moment().weekday(0).format('YYYY-MM-DD');
     const currentSunday = moment().weekday(6).format('YYYY-MM-DD');
     let weekDate = '';
-    if (currentDate < currentMonday) {
-        weekDate = '[上周]dd ' + detailTime;
-    }else if (currentDate > currentSunday) {
-        weekDate = '[下周]dd ' + detailTime;
-    }else{
-        weekDate = '[周]dd ' + detailTime;
-    }
+    
+    // if (currentDate < currentMonday) {
+    //     weekDate = '[上周]dd ' + detailTime;
+    // }else if (currentDate > currentSunday) {
+    //     weekDate = '[下周]dd ' + detailTime;
+    // }else{
+    //     weekDate = '[周]dd ' + detailTime;
+    // }
     return moment(value).calendar(null, {
-        sameDay: '[今天 ]' + moment(value).format('H:mm'),
-        nextDay: '[明天 ]' + detailTime,
+        sameDay: '[today ]' + moment(value).format('H:mm'),
         nextWeek: weekDate,
-        lastDay: '[昨天 ]' + detailTime,
+        lastDay: '[yesterday ]' + detailTime,
         lastWeek: weekDate,
-        sameElse: 'M月D日 H:mm'
+        sameElse: 'M.D H:mm'
     });
 };
 /**

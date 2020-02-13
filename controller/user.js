@@ -7,11 +7,9 @@ const {
 const login = (member_name, password) => {
 
 	const sql = `
-        select member_name from system_member where (member_name='${member_name}' OR email='${member_name}') and password='${password}'
+        select member_name,id from system_member where (member_name='${member_name}' OR email='${member_name}') and password='${password}'
     `
 	return exec(sql).then(rows => {
-		// console.log(rows[0]);
-
 		return rows[0] || {}
 	})
 }
@@ -69,21 +67,73 @@ const changePassword = (id, password, answer) => {
 	`
 	return exec(test_sql).then((rows) => {
 		if (rows.length) {
-			return exec(change_sql).then(()=>{
+			return exec(change_sql).then(() => {
 				return true
 			})
-			
 		} else {
 			return false
 		}
 	})
 }
 
+// 修改账户信息
+const edit_personal = (nickname, description, id) => {
+	const edit_sql = `
+		update system_member
+		set nickname='${nickname}',description='${description}'
+		where
+		id='${id}'
+	`
 
+	return exec(edit_sql)
+}
 
+// 修改密码（已登录）
+const edit_password = (id, password, newPassword) => {
+	const test_sql = `
+	select *from system_member where (password='${password}' and id='${id}')
+ `
+	const edit_sql = `
+		update system_member
+		set password='${newPassword}'
+		where
+		id='${id}'
+	`
+	return exec(test_sql).then((rows) => {
+		if (rows.length) {
+			return exec(edit_sql).then(() => {
+				return true
+			})
+		} else {
+			return false
+		}
+	})
+}
 
+// 修改邮箱
+const edit_email = (email, id) => {
+	const test_sql = `
+		select *from system_member where (email='${email}')
+ 	`
+	const edit_sql = `
+		update system_member
+		set email='${email}'
+		where
+		id='${id}'
+	`
+	console.log(edit_sql);
+	
+	return exec(test_sql).then((rows) => {
+		if (rows.length) {
+			return false
+		} else {
+			return exec(edit_sql).then(() => {
+				return true
+			})
+		}
+	})
 
-
+}
 
 
 async function zc(member_name, password, question, answer, email) {
@@ -118,4 +168,7 @@ module.exports = {
 	register,
 	question,
 	changePassword,
+	edit_personal,
+	edit_password,
+	edit_email,
 }
