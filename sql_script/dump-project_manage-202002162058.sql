@@ -87,7 +87,7 @@ CREATE TABLE `project_member_relation` (
   `member_name` varchar(32) NOT NULL COMMENT '成员名',
   `collect` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否收藏，默认为1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8 COMMENT='项目成员关系表';
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8 COMMENT='项目成员关系表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -96,7 +96,7 @@ CREATE TABLE `project_member_relation` (
 
 LOCK TABLES `project_member_relation` WRITE;
 /*!40000 ALTER TABLE `project_member_relation` DISABLE KEYS */;
-INSERT INTO `project_member_relation` VALUES (8,11,'2020-02-02 15:00:16','','2020-02-02 15:00:16','qqqq',1),(9,8,'2020-02-02 15:28:28','','2020-02-02 15:28:28','qqqq',1),(10,9,'2020-02-02 15:28:32','','2020-02-02 15:28:32','qqqq',1),(11,10,'2020-02-03 02:26:13','','2020-02-03 02:26:13','qqqq',1),(12,1,'2020-02-04 08:55:15','','2020-02-04 08:55:15','qqqq',1),(13,16,'2020-02-05 08:51:48','','2020-02-05 08:51:48','qqqq',1),(14,18,'2020-02-10 11:51:31','','2020-02-10 11:51:31','qqqq',1),(15,23,'2020-02-10 12:09:30','','2020-02-10 12:09:30','member_name',1),(16,24,'2020-02-10 12:11:59','','2020-02-10 12:11:59','member_name',1),(17,25,'2020-02-10 12:47:06','','2020-02-10 12:47:06','member_name',1),(18,26,'2020-02-10 13:14:56','','2020-02-10 13:14:56','member_name',1),(19,27,'2020-02-10 13:16:38','','2020-02-10 13:16:38','member_name',1),(20,28,'2020-02-10 13:23:52','','2020-02-10 13:23:52','member_name',1),(21,29,'2020-02-10 13:24:56','','2020-02-10 13:24:56','member_name',1),(22,31,'2020-02-10 13:28:13','','2020-02-10 13:28:13','member_name',1),(23,32,'2020-02-10 13:28:40','','2020-02-10 13:28:40','member_name',1),(24,33,'2020-02-10 13:29:50','','2020-02-10 13:29:50','member_name',1),(25,34,'2020-02-10 13:31:36','','2020-02-10 13:31:36','member_name',1),(26,35,'2020-02-10 13:43:00','','2020-02-10 13:43:00','member_name',1),(27,36,'2020-02-10 13:43:09','','2020-02-10 13:43:09','member_name',1),(28,37,'2020-02-10 13:44:24','','2020-02-10 13:44:24','member_name',1),(29,38,'2020-02-11 08:08:47','','2020-02-11 08:08:47','member_name',1),(30,39,'2020-02-12 08:11:49','','2020-02-12 08:11:49','member_name',1);
+INSERT INTO `project_member_relation` VALUES (47,60,'2020-02-15 09:40:58','','2020-02-15 09:40:58','member_name',1),(48,61,'2020-02-15 09:41:13','','2020-02-15 09:41:13','member_name',1),(49,62,'2020-02-15 09:43:05','','2020-02-15 09:43:05','member_name',1),(50,63,'2020-02-15 09:48:27','','2020-02-15 09:48:27','member_name',1),(51,64,'2020-02-16 12:48:23','','2020-02-16 12:48:23','普通用户',1);
 /*!40000 ALTER TABLE `project_member_relation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -117,8 +117,10 @@ CREATE TABLE `project_task_relation` (
   `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   `deleted` tinyint(4) NOT NULL DEFAULT '0' COMMENT '项目对应任务是否被删除',
   `complete` tinyint(4) NOT NULL DEFAULT '0' COMMENT '任务是否完成',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8 COMMENT='项目任务关系表';
+  `sort` int(11) DEFAULT NULL COMMENT '排序',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `project_task_relation_un` (`sort`)
+) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=utf8 COMMENT='项目任务关系表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -127,7 +129,7 @@ CREATE TABLE `project_task_relation` (
 
 LOCK TABLES `project_task_relation` WRITE;
 /*!40000 ALTER TABLE `project_task_relation` DISABLE KEYS */;
-INSERT INTO `project_task_relation` VALUES (56,34,'3','','2020-02-11 07:37:24','','2020-02-11 07:37:24',1,0),(57,34,'1','','2020-02-11 07:37:21','','2020-02-11 07:37:21',1,0),(58,34,'1','','2020-02-11 08:00:07','','2020-02-11 08:00:07',1,0),(59,34,'1','','2020-02-11 08:01:40','','2020-02-11 08:01:40',0,0),(60,34,'2','','2020-02-11 08:01:41','','2020-02-11 08:01:41',0,0),(61,34,'3','','2020-02-11 08:01:42','','2020-02-11 08:01:42',0,0),(62,38,'任务2','qqqq','2020-02-11 08:08:47','','2020-02-11 08:08:47',0,0),(63,38,'任务3','qqqq','2020-02-11 08:08:47','','2020-02-11 08:08:47',0,0),(64,38,'任务1','qqqq','2020-02-11 08:08:47','','2020-02-11 08:08:47',0,0);
+INSERT INTO `project_task_relation` VALUES (56,34,'3','','2020-02-11 07:37:24','','2020-02-11 07:37:24',1,0,NULL),(57,34,'1','','2020-02-11 07:37:21','','2020-02-11 07:37:21',1,0,NULL),(58,34,'1','','2020-02-11 08:00:07','','2020-02-11 08:00:07',1,0,NULL),(59,34,'1','','2020-02-11 08:01:40','','2020-02-11 08:01:40',0,0,NULL),(60,34,'2','','2020-02-11 08:01:41','','2020-02-11 08:01:41',0,0,NULL),(61,34,'3','','2020-02-11 08:01:42','','2020-02-11 08:01:42',0,0,NULL),(62,38,'任务2','qqqq','2020-02-11 08:08:47','','2020-02-11 08:08:47',0,0,NULL),(63,38,'任务3','qqqq','2020-02-11 08:08:47','','2020-02-11 08:08:47',0,0,NULL),(64,38,'任务1','qqqq','2020-02-11 08:08:47','','2020-02-11 08:08:47',0,0,NULL),(65,40,'项目任务','qqqq','2020-02-14 12:39:45','','2020-02-14 12:39:45',0,0,NULL),(66,40,'任务1','qqqq','2020-02-14 12:39:45','','2020-02-14 12:39:45',0,0,NULL),(67,46,'项目任务','qqqq','2020-02-14 13:49:00','','2020-02-14 13:49:00',0,0,NULL),(68,46,'任务1','qqqq','2020-02-14 13:49:00','','2020-02-14 13:49:00',0,0,NULL),(69,53,'1212','','2020-02-15 07:53:25','','2020-02-15 07:53:25',0,0,NULL),(70,53,'1212','','2020-02-15 07:53:23','','2020-02-15 07:53:23',0,0,NULL),(71,53,'1212','','2020-02-15 07:53:41','','2020-02-15 07:53:41',0,0,NULL),(72,62,'项目任务','123','2020-02-15 09:43:05','','2020-02-15 09:43:05',0,0,NULL),(73,62,'任务1','123','2020-02-15 09:43:05','','2020-02-15 09:43:05',0,0,NULL),(74,63,'项目任务','123','2020-02-15 09:48:27','','2020-02-15 09:48:27',0,0,NULL),(75,63,'任务1','123','2020-02-15 09:48:27','','2020-02-15 09:48:27',0,0,NULL);
 /*!40000 ALTER TABLE `project_task_relation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -140,7 +142,7 @@ DROP TABLE IF EXISTS `project_template`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `project_template` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键自动递增',
-  `picture_path` varchar(256) NOT NULL DEFAULT '' COMMENT '模板图片路径',
+  `cover` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '模板图片路径',
   `template_name` varchar(64) NOT NULL DEFAULT '' COMMENT '模板名字',
   `description` varchar(256) DEFAULT '' COMMENT '描述',
   `creator` varchar(32) NOT NULL DEFAULT '' COMMENT '创建人',
@@ -150,7 +152,7 @@ CREATE TABLE `project_template` (
   `system_template` tinyint(4) NOT NULL DEFAULT '0' COMMENT '默认任务',
   `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='模板表';
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COMMENT='模板表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -159,7 +161,7 @@ CREATE TABLE `project_template` (
 
 LOCK TABLES `project_template` WRITE;
 /*!40000 ALTER TABLE `project_template` DISABLE KEYS */;
-INSERT INTO `project_template` VALUES (1,'链接','系统模板','简介','member_name','2020-01-26 12:25:55','','2020-01-26 12:25:55',1,0),(2,'undefined','undefined','undefined','qqqq','2020-02-10 07:36:24','','2020-02-10 07:36:24',0,0),(3,'undefined','1','11','qqqq','2020-02-10 07:43:42','','2020-02-10 07:43:42',0,0),(4,'undefined','添加模板','123','qqqq','2020-02-10 07:43:55','','2020-02-10 07:43:55',0,0),(5,'undefined','1212','12','qqqq','2020-02-10 07:48:59','','2020-02-10 07:48:59',0,0),(6,'undefined','3','3','qqqq','2020-02-10 11:49:21','','2020-02-10 11:49:21',0,0);
+INSERT INTO `project_template` VALUES (1,'链接','系统模板','简介','member_name','2020-01-26 12:25:55','','2020-01-26 12:25:55',1,0),(13,'http://127.0.0.1:3000/public/template/cover/1867034-1d3e43cdb301fc9b.png','亲亲我我','我我','qqqq','2020-02-14 13:36:19','','2020-02-14 13:36:19',0,0),(14,'http://127.0.0.1:3000/public/template/cover/20160908134036615.png','模板1','模板1说明','123','2020-02-15 08:50:52','','2020-02-15 08:50:52',0,0);
 /*!40000 ALTER TABLE `project_template` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -213,13 +215,14 @@ CREATE TABLE `system_member` (
   `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   `question` varchar(100) DEFAULT NULL COMMENT '密保问题',
   `answer` varchar(100) DEFAULT NULL COMMENT '密保答案',
-  `team` varchar(32) DEFAULT NULL COMMENT '所属团队',
+  `team` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '所属团队',
   `super_leader` tinyint(4) NOT NULL DEFAULT '0' COMMENT '超级管理员',
   `avatar` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '用户头像',
   `description` varchar(100) DEFAULT NULL COMMENT '个人简介',
+  `team_id` int(11) DEFAULT NULL COMMENT '所属团队id',
   PRIMARY KEY (`id`),
   UNIQUE KEY `member_un` (`member_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='成员表';
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COMMENT='成员表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -228,7 +231,7 @@ CREATE TABLE `system_member` (
 
 LOCK TABLES `system_member` WRITE;
 /*!40000 ALTER TABLE `system_member` DISABLE KEYS */;
-INSERT INTO `system_member` VALUES (1,'undefined',NULL,'undefined','','qqqQQQQq',0,0,'','2020-01-13 12:06:02',NULL,'2020-01-13 12:06:02','你的手机号码','123','',0,'',NULL),(2,'member_name',NULL,'email','','123',0,1,'','2020-01-13 12:11:49',NULL,'2020-01-13 12:11:49','你的手机号码','undefined','qq',0,'',NULL),(3,'test',NULL,'emai1l','','test',0,1,'','2020-01-13 12:16:30',NULL,'2020-01-13 12:16:30','你的手机号码','undefined','qqq',0,'',NULL),(4,'sss',NULL,'test@qq.com','','qwe123',0,0,'','2020-01-28 14:19:06',NULL,'2020-01-28 14:19:06','你的手机号码','123','qq',0,'',NULL),(5,'test@qq.com',NULL,'vqon63@163.com','','qwe123',0,0,'','2020-01-28 14:19:40',NULL,'2020-01-28 14:19:40','你的手机号码','123','',0,'',NULL),(6,'test@qq.com1',NULL,'aqon631@16113.com','','qwe123',0,0,'','2020-01-28 14:22:07',NULL,'2020-01-28 14:22:07','你的手机号码','undefined','ss',0,'',NULL),(7,'qqqq','qqqq123','113@163.com','','123123',0,1,'','2020-01-29 07:05:47',NULL,'2020-01-29 07:05:47','你的手机号码','qq','qq',1,'ma','qqqqq'),(8,'qqq',NULL,'vqon63@q163.com','','qqq123',0,0,'','2020-01-29 11:45:38',NULL,'2020-01-29 11:45:38','你的手机号码','qqq','ss',0,'',NULL);
+INSERT INTO `system_member` VALUES (9,'123',NULL,'vqon63@163.com','','qqq123',0,1,'','2020-02-15 08:26:40',NULL,'2020-02-15 08:26:40','你的职业','学生','团队1',1,'http://127.0.0.1:3000/public/avatar/1867034-1d3e43cdb301fc9b.png',NULL,18),(13,'队长','队长','3311@qq.com','','qqq123',0,1,'','2020-02-16 09:02:55',NULL,'2020-02-16 09:02:55','你的职业','学生','团队2',0,'',NULL,20),(14,'普通用户','普通用户','wqwqeqweq@q.com','','qqq123',0,0,'','2020-02-16 09:09:13',NULL,'2020-02-16 09:09:13','你的职业','学生','团队2',0,'',NULL,NULL);
 /*!40000 ALTER TABLE `system_member` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -288,8 +291,9 @@ CREATE TABLE `system_project` (
   `pigeonhole` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否归档',
   `plan` int(11) NOT NULL DEFAULT '0' COMMENT '项目进度',
   `resolve` tinyint(4) NOT NULL DEFAULT '0' COMMENT '请求是否处理完成',
+  `cover` varchar(100) DEFAULT NULL COMMENT '项目封面',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8 COMMENT='项目表';
+) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8 COMMENT='项目表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -298,7 +302,7 @@ CREATE TABLE `system_project` (
 
 LOCK TABLES `system_project` WRITE;
 /*!40000 ALTER TABLE `system_project` DISABLE KEYS */;
-INSERT INTO `system_project` VALUES (1,'temp1',-2,'temp','member_name','2020-01-19 05:59:19','','2020-01-19 05:59:19',0,'qq',1,0,11,1),(2,'测试',-2,'简介','member_name','2020-01-19 06:05:42','','2020-01-19 06:05:42',1,'qq',0,0,11,1),(33,'undefined1',1,'1','member_name','2020-02-10 13:29:50','','2020-02-10 13:29:50',0,'qq',1,0,0,1),(34,'undefined12',2,'112','qqqq','2020-02-10 13:31:36','','2020-02-10 13:31:36',0,'qq',0,0,0,1),(35,'undefined11',1,'11','qqqq','2020-02-10 13:43:00','','2020-02-10 13:43:00',0,'qq',0,0,0,1),(36,'后台',4,'11','qqqq','2020-02-10 13:43:09','','2020-02-10 13:43:09',0,'qq',0,0,0,1),(37,'121211',-1,'1212','qqqq','2020-02-10 13:44:24','','2020-02-10 13:44:24',0,'qq',0,0,0,1),(38,'项目1',4,'undefined','qqqq','2020-02-11 08:08:47','','2020-02-11 08:08:47',0,'qq',0,0,0,1),(39,'凄凄切切',-1,'qq','qqqq','2020-02-12 08:11:49','','2020-02-12 08:11:49',0,'qq',0,0,0,1);
+INSERT INTO `system_project` VALUES (62,'333',1,'3','123','2020-02-15 09:43:05','','2020-02-15 09:43:05',0,'团队1',0,0,0,1,'http://127.0.0.1:3000/public/cover/1867034-1d3e43cdb301fc9b.png'),(63,'undefined1',1,'undefined','123','2020-02-15 09:48:27','','2020-02-15 09:48:27',1,'团队1',0,0,0,1,'链接'),(64,'项目1',1,'1','普通用户','2020-02-16 12:47:40','','2020-02-16 12:47:40',1,'团队2',0,0,0,1,NULL);
 /*!40000 ALTER TABLE `system_project` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -350,7 +354,7 @@ CREATE TABLE `task_sontask_relation` (
   `task_name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '该子任务名',
   `project_id` int(11) NOT NULL COMMENT '项目id',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=68 DEFAULT CHARSET=utf8 COMMENT='任务与子任务关系表';
+) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8 COMMENT='任务与子任务关系表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -359,7 +363,7 @@ CREATE TABLE `task_sontask_relation` (
 
 LOCK TABLES `task_sontask_relation` WRITE;
 /*!40000 ALTER TABLE `task_sontask_relation` DISABLE KEYS */;
-INSERT INTO `task_sontask_relation` VALUES (-2,55,'qqqq','qqqq',1,0,'2020-02-11 07:51:50','2020-02-11 07:51:50',NULL,'1',34),(63,59,'qqqq','qqqq',1,0,'2020-02-12 09:31:48','2020-02-12 09:31:48',NULL,'qq',34),(64,59,'qqqq','qqqq',1,0,'2020-02-12 09:31:50','2020-02-12 09:31:50',NULL,'qq',34),(65,59,'qqqq','qqqq',0,0,'2020-02-12 09:31:52','2020-02-12 09:31:52',NULL,'qq',34),(66,59,'qqqq','qqqq',0,0,'2020-02-12 09:31:54','2020-02-12 09:31:54',7,'qq',34),(67,59,'qqqq','qqqq',0,0,'2020-02-12 09:51:16','2020-02-12 09:51:16',7,'qq',34);
+INSERT INTO `task_sontask_relation` VALUES (-2,55,'qqqq','qqqq',1,0,'2020-02-11 07:51:50','2020-02-11 07:51:50',NULL,'1',34),(63,59,'qqqq','qqqq',1,0,'2020-02-12 09:31:48','2020-02-12 09:31:48',NULL,'qq',34),(64,59,'qqqq','qqqq',1,0,'2020-02-12 09:31:50','2020-02-12 09:31:50',NULL,'qq',34),(65,59,'qqqq','qqqq',0,0,'2020-02-12 09:31:52','2020-02-12 09:31:52',NULL,'qq',34),(66,59,'qqqq','qqqq',0,0,'2020-02-12 09:31:54','2020-02-12 09:31:54',7,'qq',34),(67,59,'qqqq','qqqq',0,0,'2020-02-12 09:51:16','2020-02-12 09:51:16',7,'qq',34),(69,71,'qqqq','qqqq',0,0,'2020-02-15 08:07:25','2020-02-15 08:07:25',NULL,'1212',53),(71,70,'qqqq','qqqq',0,0,'2020-02-15 08:07:32','2020-02-15 08:07:32',7,'111',53);
 /*!40000 ALTER TABLE `task_sontask_relation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -378,8 +382,9 @@ CREATE TABLE `team_create` (
   `permission` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否允许创建团队',
   `resolve` tinyint(4) NOT NULL DEFAULT '0' COMMENT '该申请是否处理完成',
   `del` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否被删除',
+  `creator_id` int(11) NOT NULL COMMENT '创建者id',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -388,7 +393,7 @@ CREATE TABLE `team_create` (
 
 LOCK TABLES `team_create` WRITE;
 /*!40000 ALTER TABLE `team_create` DISABLE KEYS */;
-INSERT INTO `team_create` VALUES (1,'222','321','2020-02-13 11:29:14',0,1,1),(2,'ss','321','2020-02-13 11:29:32',0,1,0),(3,'qq','321','2020-02-13 11:29:32',0,1,0),(4,'33333','321','2020-02-13 11:29:32',0,1,1),(5,'333','321','2020-02-13 11:29:32',0,1,1),(6,'1231','321','2020-02-13 11:29:33',0,1,0),(7,'12311','321','2020-02-13 11:29:33',0,1,0),(8,'1111','321','2020-02-13 11:29:33',0,1,0),(9,'11111','321','2020-02-13 11:29:33',0,1,0),(10,'111111','321','2020-02-13 11:29:33',0,1,0),(11,'1111111','321','2020-02-13 11:29:34',0,1,0),(12,'111','undefined','2020-02-13 11:29:34',0,1,0),(13,'222','undefined','2020-02-13 11:29:35',0,1,1),(14,'222','undefined','2020-02-13 11:29:25',1,1,1);
+INSERT INTO `team_create` VALUES (18,'团队1','123','2020-02-15 10:01:13',1,1,0,9),(19,'33','qq ','2020-02-15 15:09:11',1,1,1,11),(20,'团队2','队长','2020-02-16 09:04:11',1,1,0,13);
 /*!40000 ALTER TABLE `team_create` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -410,7 +415,7 @@ CREATE TABLE `template_task_relation` (
   `deleted` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否被删除',
   `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COMMENT='模板任务关系表';
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COMMENT='模板任务关系表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -419,7 +424,7 @@ CREATE TABLE `template_task_relation` (
 
 LOCK TABLES `template_task_relation` WRITE;
 /*!40000 ALTER TABLE `template_task_relation` DISABLE KEYS */;
-INSERT INTO `template_task_relation` VALUES (1,'member_name','2020-01-26 12:44:27','','2020-01-26 12:44:27','项目任务',1,0,0),(2,'member_name','2020-01-26 12:44:30','','2020-01-26 12:44:30','任务1',1,0,0),(3,'qqqq','2020-02-10 11:36:50','','2020-02-10 11:36:50','任务2',2,1,0),(4,'qqqq','2020-02-10 11:38:53','','2020-02-10 11:38:53','任务3',2,1,0),(5,'qqqq','2020-02-10 11:39:02','','2020-02-10 11:39:02','4',2,0,0),(6,'qqqq','2020-02-10 11:40:40','','2020-02-10 11:40:40','4',2,0,4),(7,'qqqq','2020-02-10 11:42:10','','2020-02-10 11:42:10','4',2,0,0),(8,'qqqq','2020-02-10 11:42:13','','2020-02-10 11:42:13','4',2,1,4),(9,'qqqq','2020-02-10 11:43:18','','2020-02-10 11:43:18','3',2,0,3),(10,'qqqq','2020-02-10 13:42:27','','2020-02-10 13:42:27','任务1',4,0,0),(11,'qqqq','2020-02-10 13:42:31','','2020-02-10 13:42:31','任务2',4,0,1),(12,'qqqq','2020-02-10 13:42:35','','2020-02-10 13:42:35','任务3',4,0,3),(13,'qqqq','2020-02-10 13:42:37','','2020-02-10 13:42:37','undefined1',4,1,11);
+INSERT INTO `template_task_relation` VALUES (1,'member_name','2020-01-26 12:44:27','','2020-01-26 12:44:27','项目任务',1,0,0),(2,'member_name','2020-01-26 12:44:30','','2020-01-26 12:44:30','任务1',1,0,0),(3,'qqqq','2020-02-10 11:36:50','','2020-02-10 11:36:50','任务2',2,1,0),(4,'qqqq','2020-02-10 11:38:53','','2020-02-10 11:38:53','任务3',2,1,0),(5,'qqqq','2020-02-10 11:39:02','','2020-02-10 11:39:02','4',2,0,0),(6,'qqqq','2020-02-10 11:40:40','','2020-02-10 11:40:40','4',2,0,4),(7,'qqqq','2020-02-10 11:42:10','','2020-02-10 11:42:10','4',2,0,0),(8,'qqqq','2020-02-10 11:42:13','','2020-02-10 11:42:13','4',2,1,4),(9,'qqqq','2020-02-10 11:43:18','','2020-02-10 11:43:18','3',2,0,3),(10,'qqqq','2020-02-10 13:42:27','','2020-02-10 13:42:27','任务1',4,0,0),(11,'qqqq','2020-02-10 13:42:31','','2020-02-10 13:42:31','任务2qq',4,0,4),(12,'qqqq','2020-02-10 13:42:35','','2020-02-10 13:42:35','任务3',4,0,3),(13,'qqqq','2020-02-10 13:42:37','','2020-02-10 13:42:37','undefined1',4,1,11),(14,'123','2020-02-15 08:51:17','','2020-02-15 08:51:17','任务1',14,0,1),(15,'123','2020-02-15 08:51:25','','2020-02-15 08:51:25','任务2',14,0,2);
 /*!40000 ALTER TABLE `template_task_relation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -436,4 +441,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-02-13 23:36:01
+-- Dump completed on 2020-02-16 20:58:39
