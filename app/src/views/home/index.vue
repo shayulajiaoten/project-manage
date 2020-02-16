@@ -14,7 +14,7 @@
           </div>
           <div class="user-info">
             <div class="title">{{helloTime}}{{ userInfo.member_name }}，祝你开心每一天！</div>
-            
+
             <div class="team muted">
               <template v-if="userInfo.team">{{ userInfo.team }}</template>
             </div>
@@ -121,7 +121,15 @@
         </a-col>
       </a-row>
       <a-row :gutter="24">
-        <a-col style="padding: 0 12px" :xl="8" :lg="24" :md="24" :sm="24" :xs="24" v-show="userInfo.is_team_leader">
+        <a-col
+          style="padding: 0 12px"
+          :xl="8"
+          :lg="24"
+          :md="24"
+          :sm="24"
+          :xs="24"
+          v-show="userInfo.is_team_leader"
+        >
           <a-card
             class="tasks-list"
             :title="`项目申请`"
@@ -153,7 +161,15 @@
             </a-list>
           </a-card>
         </a-col>
-        <a-col style="padding: 0 12px" :xl="8" :lg="24" :md="24" :sm="24" :xs="24" v-show="userInfo.super_leader">
+        <a-col
+          style="padding: 0 12px"
+          :xl="8"
+          :lg="24"
+          :md="24"
+          :sm="24"
+          :xs="24"
+          v-show="userInfo.super_leader"
+        >
           <a-card
             class="tasks-list"
             :title="`团队申请`"
@@ -266,8 +282,6 @@ export default {
       });
       if (reset) {
         this.projectList = [];
-        this.pagination.page = 1;
-        this.pagination.pageSize = 9;
       }
       this.getProjectList(loading);
       this.getTasks();
@@ -277,9 +291,11 @@ export default {
         this.loading = true;
       }
 
-      getProjectList("all").then(res => {
-        this.projectList = res.data;
-        this.projectTotal = res.data.length;
+      getProjectList("my").then(res => {
+        if (res.errno != -1) {
+          this.projectList = res.data;
+          this.projectTotal = res.data.length;
+        }
         this.loading = false;
       });
     },

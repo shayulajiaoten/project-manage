@@ -18,9 +18,6 @@ const {
   ErrorModel
 } = require('../model/resModel')
 
-// const {
-//   username
-// } = req.session
 
 // 创建团队接口
 router.post('/createTeam', loginCheck, function (req, res, next) {
@@ -28,20 +25,27 @@ router.post('/createTeam', loginCheck, function (req, res, next) {
     teamName
   } = req.body
   const {
-    username
+    member_name,
+    member_id
   } = req.session
 
-  const result = create_team(teamName, username)
+  const result = create_team(teamName, member_name, member_id)
   return result.then((data) => {
-    if (data) {
-      res.json(
-        new SuccessModel('申请成功')
-      )
-    } else {
-      res.json(
-        new ErrorModel('该队名已存在或正在申请中')
-      )
+    switch (data) {
+      case -1:
+        return res.json(
+          new ErrorModel('当前用户已归属团队')
+        )
+      case -2:
+        return res.json(
+          new ErrorModel('该队名已存在或正在申请中')
+        )
+      case 1:
+        return res.json(
+          new SuccessModel('申请成功')
+        )
     }
+
   })
 })
 

@@ -1,4 +1,17 @@
 const express = require('express');
+var multer = require('multer')
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './public/cover/'); // 保存的路径，备注：需要自己创建
+  },
+  filename: function (req, file, cb) {
+    // 将保存文件名设置为 字段名 + 时间戳，比如 logo-1478521468943
+    cb(null, file.originalname);
+  }
+});
+var upload = multer({
+  storage
+});
 const router = express.Router();
 const {
   create_project,
@@ -16,6 +29,7 @@ const {
   invite_member,
   collect_list,
   get_project,
+  upload_cover
 } = require('../controller/project')
 const {
   SuccessModel,
@@ -106,6 +120,8 @@ router.get('/allProjectList', loginCheck, (req, res, next) => {
   const {
     member_name
   } = req.session
+  console.log(req.session);
+  
   return getMember(member_name).then((data) => {
     if (data.team) {
       teamName = data.team
@@ -288,12 +304,13 @@ router.get('/collectList', loginCheck, (req, res, next) => {
 // 更改项目信息
 router.post('/changeMessage', loginCheck, (req, res, next) => {
   const {
+    cover,
     projectId,
     plan,
     projectName,
     description
   } = req.body
-  const result = change_messsage_project(projectId, plan, projectName, description)
+  const result = change_messsage_project(cover,projectId, plan, projectName, description)
   return result.then(() => {
     return res.json(
       new SuccessModel('更改成功')
@@ -314,4 +331,16 @@ router.post('./inviteMember', loginCheck, (req, res, next) => {
     )
   })
 })
+
+// 上传项目封面
+router.post('/uploadCover', upload.single('cover'), function (req, res, next) {
+  const {
+    id 
+  } = req.body
+  const file = req.file;
+    res.json(
+      new SuccessModel(`http://127.0.0.1:3000/public/cover/${file.originalname}`)
+    )
+  // })
+});
 module.exports = router;

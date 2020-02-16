@@ -45,11 +45,11 @@ export const createRoute = (data) => {
     };
 };
 
-// export const getBase64 = (img, callback) => {
-//     const reader = new FileReader();
-//     reader.addEventListener('load', () => callback(reader.result));
-//     reader.readAsDataURL(img);
-// };
+export const getBase64 = (img, callback) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result));
+    reader.readAsDataURL(img);
+};
 
 // /**
 //  * 操作确认

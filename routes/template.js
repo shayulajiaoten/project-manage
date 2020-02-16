@@ -13,21 +13,30 @@ const {
   SuccessModel,
   ErrorModel
 } = require('../model/resModel')
-// const {
-//   member_name
-// } = req.session
-
+var multer = require('multer')
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './public/template/cover'); // 保存的路径，备注：需要自己创建
+  },
+  filename: function (req, file, cb) {
+    // 将保存文件名设置为 字段名 + 时间戳，比如 logo-1478521468943
+    cb(null, file.originalname);
+  }
+});
+var upload = multer({
+  storage
+});
 // 创建模板
 router.post('/createTemplate', (req, res, next) => {
   const {
     member_name
   } = req.session
   const {
-    picturePath,
+    cover,
     template_name,
     description
   } = req.body
-  return create_template(picturePath, template_name, description, member_name).then((data) => {
+  return create_template(cover, template_name, description, member_name).then((data) => {
     if (data == -1) {
       return res.json(
         new ErrorModel('项目模板已存在')
@@ -43,12 +52,12 @@ router.post('/createTemplate', (req, res, next) => {
 // 修改模板信息
 router.post('/changeTemplate', (req, res, next) => {
   const {
-    picturePath,
-    templateName,
+    cover,
+    template_name,
     description,
-    templateId
+    id
   } = req.body
-  return change_template(picturePath, templateName, description, templateId).then(() => {
+  return change_template(cover, template_name, description, id).then(() => {
     return res.json(
       new SuccessModel('修改成功')
     )
@@ -130,4 +139,15 @@ router.post('/delTemplateTask', (req, res, next) => {
     )
   })
 })
+
+// 上传项目模板封面
+router.post('/uploadCover', upload.single('cover'), function (req, res, next) {
+  const {
+    id
+  } = req.body
+  const file = req.file;
+  res.json(
+    new SuccessModel(`http://127.0.0.1:3000/public/template/cover/${file.originalname}`)
+  )
+});
 module.exports = router;

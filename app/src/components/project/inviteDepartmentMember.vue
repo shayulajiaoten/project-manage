@@ -39,7 +39,7 @@
               </template>
             </span>
             <a-list-item-meta :description="item.email">
-              <span slot="title">{{item.name}}</span>
+              <span slot="title">{{item.member_name}}</span>
               <a-avatar slot="avatar" icon="user" :src="item.avatar" />
             </a-list-item-meta>
           </a-list-item>

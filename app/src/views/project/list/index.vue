@@ -114,7 +114,7 @@
 <script>
 import projectConfig from "@/components/project/projectConfig";
 import { selfList, doData, recycle } from "@/api/project";
-import {checkResponse} from '@/assets/js/utils';
+import { checkResponse } from "@/assets/js/utils";
 import pagination from "@/mixins/pagination";
 import moment from "moment";
 import { collect } from "../../../api/projectCollect";
@@ -174,10 +174,10 @@ export default {
       }
       this.requestData.type = this.$route.params.type;
       app.loading = true;
-      console.log(app.requestData.type);
-
       selfList(app.requestData.type).then(res => {
+        if (res.errno != -1) {
         app.dataSource = app.dataSource.concat(res.data);
+        }
         app.loading = false;
         app.loadingMore = false;
       });

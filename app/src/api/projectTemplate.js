@@ -6,8 +6,10 @@ export function list(data) {
 }
 
 export function doData(data) {
+    // console.log(data);
+    
     let url = 'api/template/createTemplate';
-    if (data.code) {
+    if (data.id) {
         url = 'api/template/changeTemplate';
     }
     return $http.post(url, data);

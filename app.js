@@ -43,7 +43,9 @@ app.use(session({
   },
   store: sessionStore
 }))
-
+app.get('/public/*/*', function (req, res) {
+  res.sendFile(`${__dirname}/${req.url}`);
+})
 app.use('/api/user', userRouter)
 app.use('/api/home', homeRouter)
 app.use('/api/members', membersRouter)

@@ -45,6 +45,24 @@ const edit_team_status = (id, status) => {
     set permission='${status}',resolve=1
     where id='${id}'
   `
+  const sel_sql = `
+    select *from team_create where id='${id}'
+  `
+
+  if (status === 1) {
+    return exec(sel_sql).then((res) => {
+      const add_sql = `
+      update system_member
+      set team_id='${id}',team='${res[0].team}',is_team_leader=1
+      where id='${res[0].creator_id}'
+    `
+      console.log(add_sql);
+
+      return exec(add_sql).then(() => {
+        exec(edit_sql)
+      })
+    })
+  }
   return exec(edit_sql)
 }
 module.exports = {

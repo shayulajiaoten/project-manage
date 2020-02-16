@@ -21,7 +21,7 @@ const register = (member_name, password, question, answer, email, nickname) => {
 		select *from system_member where (member_name='${member_name}' OR email='${email}')
 	`
 	const register_user = `
-		insert into system_member (member_name,password,question,answer,email) values ('${member_name}','${password}','${question}','${answer}','${email}' )
+		insert into system_member (member_name,password,question,answer,email,nickname) values ('${member_name}','${password}','${question}','${answer}','${email}','${nickname}' )
 	`
 
 	return exec(test_user).then(rows => {
@@ -122,7 +122,7 @@ const edit_email = (email, id) => {
 		id='${id}'
 	`
 	console.log(edit_sql);
-	
+
 	return exec(test_sql).then((rows) => {
 		if (rows.length) {
 			return false
@@ -134,6 +134,20 @@ const edit_email = (email, id) => {
 	})
 
 }
+
+// 上传头像 
+const upload_avatar = (src, id) => {
+	const upload_sql = `
+		update system_member
+		set avatar = 'http://127.0.0.1:3000${src}'
+		where
+		id ='${id}'
+	`
+	console.log(upload_sql);
+	
+	return exec(upload_sql)
+}
+
 
 
 async function zc(member_name, password, question, answer, email) {
@@ -171,4 +185,5 @@ module.exports = {
 	edit_personal,
 	edit_password,
 	edit_email,
+	upload_avatar,
 }

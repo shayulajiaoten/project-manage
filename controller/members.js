@@ -4,24 +4,34 @@ const {
 } = require('../db/mysql')
 
 // 申请创建团队
-const create_team = (teamName, username) => {
+const create_team = (teamName, username, id) => {
   const test_sql = `
       select  *from team_create where (team='${teamName}')
   `
   const create_sql = `
-      insert into team_create (team,creator) values ('${teamName}','${username}' )
+      insert into team_create (team,creator,creator_id) values ('${teamName}','${username}','${id}' )
     `
-  console.log(test_sql);
-
-  return exec(test_sql).then((rows) => {
-    if (rows[0]) {
-      return false
+  const test_member_sql = `
+    select team from system_member where id ='${id}'
+  `
+  return exec(test_member_sql).then((rows) => {
+    if (rows[0].team) {
+      return -1
     } else {
-      return exec(create_sql).then(() => {
-        return true
+      return exec(test_sql).then((rows) => {
+        if (rows[0]) {
+          return -2
+        } else {
+          return exec(create_sql).then(() => {
+            return 1
+          })
+        }
       })
     }
   })
+
+
+
 }
 
 
@@ -101,7 +111,7 @@ const delete_team = (member_name, teamName) => {
 // 查看对应团队成员列表
 const team_members_list = (teamName) => {
   const query_list_sql = `
-    select id,member_name,nickname,email,is_team_leader from system_member where (team='${teamName}')
+    select id,member_name,nickname,email,is_team_leader,avatar from system_member where (team='${teamName}')
   `
   console.log(query_list_sql);
 
@@ -136,7 +146,7 @@ const delete_member = (teamName, memberId, member_name) => {
     select *from system_member where (member_name = '${member_name}' and team='${teamName}' and is_team_leader=1)
   ` // 必须为队长才能移除团队成员
   const update_member_sql = `
-    UPDATE system_member SET team='' WHERE  id='${memberId}'
+    UPDATE system_member SET team='',is_team_leader=0 WHERE  id='${memberId}'
   `
   return exec(isleader_sql).then((rows) => {
     if (rows[0]) {
@@ -152,7 +162,7 @@ const delete_member = (teamName, memberId, member_name) => {
 // 查询没有加入任何团队的成员
 const noteam_member = (email) => {
   const query_list_sql = `
-  select id,member_name,nickname,email,is_team_leader,team from system_member where (team='' and email like '${email}%')
+  select  *from system_member where ((team='' or team is null) and email like '${email}%')
 `
   console.log(query_list_sql);
 

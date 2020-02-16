@@ -9,14 +9,15 @@
           <div class="infos">
             <p class="item-title">项目封面</p>
             <div class="cover-item">
-              <!-- <template v-if="project.cover">
+              <template v-if="project.cover">
                 <img class="avatar" :src="project.cover" />
               </template>
-              <span class="no-avatar" v-show="!project.cover"></span> -->
+              <span class="no-avatar" v-show="!project.cover"></span>
               <a-upload
                 name="cover"
                 class="cover-uploader"
                 :showUploadList="false"
+                :data="{id: code}"
                 :headers="headers"
                 :action="uploadAction"
                 :beforeUpload="beforeUpload"
@@ -98,7 +99,7 @@ import {
 } from "../../api/project";
 import {
   list as getTaskWorkflowList,
-  edit as EditTaskWorkflow,
+  edit as EditTaskWorkflow
 } from "../../api/taskWorkflow";
 import { _getAll as getTaskStages } from "../../api/taskStages";
 
@@ -109,7 +110,7 @@ import {
   // getAuthorization,
   getBase64
 } from "../../assets/js/utils";
-import { Login } from '../../api/user';
+import { Login } from "../../api/user";
 
 export default {
   name: "projectConfig",
@@ -178,15 +179,15 @@ export default {
       projectMembers: [],
       taskStages: [],
       uploadLoading: false,
-      uploadAction: getApiUrl("project/project/uploadCover")
+      uploadAction: "api/project/uploadCover"
     };
   },
   computed: {
     headers() {
-      return {}
-      
+      return {};
+
       // return getAuthorization();
-    },
+    }
   },
   watch: {
     code() {
@@ -202,18 +203,16 @@ export default {
       getProject(this.code).then(res => {
         this.loading = false;
         this.project = res.data;
-        // this.project.open_prefix = !!res.data.open_prefix;
-        // this.project.open_begin_time = !!res.data.open_begin_time;
-        // this.project.open_task_private = !!res.data.open_task_private;
       });
     },
     saveProject() {
       const project = this.project;
       doData({
+        cover: project.cover,
         projectId: project.id,
         projectName: project.project_name,
         description: project.description,
-        plan: Number(project.plan),
+        plan: Number(project.plan)
       }).then(res => {
         if (!checkResponse(res)) {
           return;
@@ -311,8 +310,9 @@ export default {
       }
       if (info.file.status === "done") {
         getBase64(info.file.originFileObj, () => {
-          this.project.cover = info.file.response.data.url;
+          this.project.cover = info.file.response.msg;
           this.uploadLoading = false;
+          // this.$emit("update", this.project);
           notice(
             {
               title: "封面上传成功"

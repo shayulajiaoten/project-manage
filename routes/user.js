@@ -1,4 +1,17 @@
 var express = require('express');
+var multer = require('multer')
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './public/avatar/'); // 保存的路径，备注：需要自己创建
+  },
+  filename: function (req, file, cb) {
+    // 将保存文件名设置为 字段名 + 时间戳，比如 logo-1478521468943
+    cb(null, file.originalname);
+  }
+});
+var upload = multer({
+  storage
+});
 var router = express.Router();
 const {
   login,
@@ -8,6 +21,7 @@ const {
   edit_personal,
   edit_password,
   edit_email,
+  upload_avatar
 } = require('../controller/user')
 const {
   SuccessModel,
@@ -180,6 +194,20 @@ router.post('/editEmail', (req, res, next) => {
         new ErrorModel('该邮箱已经绑定账户')
       )
     }
+  })
+});
+
+// 上传用户头像
+router.post('/uploadAvatar', upload.single('avatar'), function (req, res, next) {
+  const {
+    member_id
+  } = req.session
+  const file = req.file;
+  const result = upload_avatar(`/public/avatar/${file.originalname}`, member_id)
+  return result.then(() => {
+    res.json(
+      new SuccessModel(`http://127.0.0.1:3000/public/avatar/${file.originalname}`)
+    )
   })
 });
 module.exports = router;

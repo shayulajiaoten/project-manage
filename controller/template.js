@@ -10,7 +10,7 @@ const create_template = (picturePath, templateName, description, username) => {
   `
   const create_sql = `
       insert into project_template
-      (picture_path,template_name,description,creator)
+      (cover,template_name,description,creator)
       values 
       ('${picturePath}','${templateName}','${description}','${username}')
   `
@@ -28,7 +28,7 @@ const create_template = (picturePath, templateName, description, username) => {
 // 修改模板
 const change_template = (picturePath, templateName, description, templateId) => {
   const change_sql = `
-    update project_template set picture_path='${picturePath}',template_name='${templateName}',description='${description}'
+    update project_template set cover='${picturePath}',template_name='${templateName}',description='${description}'
     where (id='${templateId}')
     `
   console.log(change_sql);
@@ -102,6 +102,7 @@ const template_task_list = (id) => {
 
   return exec(select_sql)
 }
+
 // 删除模板任务
 const del_task = (id) => {
   const del_sql = `
@@ -109,6 +110,19 @@ const del_task = (id) => {
     where (id='${id}')
     `
   return exec(del_sql)
+}
+
+// 上传项目模板封面 
+const upload_template_cover = (src, id) => {
+  const upload_sql = `
+		update project_template
+		set cover = 'http://127.0.0.1:3000${src}'
+		where
+		id ='${id}'
+  `
+  console.log(upload_sql);
+
+  return exec(upload_sql)
 }
 module.exports = {
   create_template,
@@ -118,4 +132,5 @@ module.exports = {
   edit_task,
   template_task_list,
   del_task,
+  upload_template_cover,
 }

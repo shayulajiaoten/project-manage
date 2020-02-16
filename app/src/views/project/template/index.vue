@@ -76,7 +76,9 @@
             name="cover"
             class="cover-uploader"
             :showUploadList="false"
+            :data="{id: newData.id}"
             :headers="headers"
+            :action="uploadAction"
             :beforeUpload="beforeUpload"
             @change="handleChange"
           >
@@ -115,7 +117,7 @@ import { list, doData, del } from "@/api/projectTemplate";
 import { checkResponse, getBase64 } from "@/assets/js/utils";
 import pagination from "@/mixins/pagination";
 import config from "@/config/config";
-import { Login } from '../../../api/user';
+import { Login } from "../../../api/user";
 // import {getAuthorization} from "../../../assets/js/utils";
 
 export default {
@@ -129,7 +131,7 @@ export default {
       showLoadingMore: false,
       loadingMore: false,
       currentTemplate: {},
-      cover: config.PROD_URL + "/static/image/default/cover.png",
+      cover: null,
       newData: {
         id: 0
       },
@@ -140,8 +142,8 @@ export default {
         confirmLoading: false,
         modalTitle: "编辑模板"
       },
-      uploadLoading: false
-      // uploadAction: getApiUrl('project/project_template/uploadCover'),
+      uploadLoading: false,
+      uploadAction: "api/template/uploadCover"
     };
   },
   computed: {
@@ -184,6 +186,7 @@ export default {
     //         this.init(false);
     //     },
     doAction(record, action, index) {
+      this.cover = undefined;
       this.currentTemplate = record;
       let app = this;
       app.newData = { code: "" };
@@ -194,8 +197,6 @@ export default {
         app.actionInfo.modalStatus = true;
         app.actionInfo.modalTitle = "自定义模板";
         if (action == "edit") {
-          console.log(record);
-          
           //modal没显示之前不会实例化modal子元素，延迟处理
           setTimeout(function() {
             app.actionInfo.modalTitle = "编辑模板";
@@ -246,13 +247,14 @@ export default {
       app.actionInfo.confirmLoading = true;
       let obj = app.form.getFieldsValue();
       obj.cover = this.cover;
-      if (app.newData.code) {
+      if (app.newData.id) {
         //编辑
-        obj.code = app.newData.code;
+        obj.id = app.newData.id;
       } else {
-        //新增
-        // Object.assign(obj, app.newData);
+        // 新增
+        Object.assign(obj, app.newData);
       }
+
       doData(obj).then(res => {
         app.actionInfo.confirmLoading = false;
         if (!checkResponse(res)) {
@@ -271,7 +273,7 @@ export default {
       }
       if (info.file.status === "done") {
         getBase64(info.file.originFileObj, () => {
-          this.cover = info.file.response.data.url;
+          this.cover = info.file.response.msg;
           this.uploadLoading = false;
         });
       }

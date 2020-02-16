@@ -35,7 +35,7 @@
                 name="avatar"
                 class="avatar-uploader"
                 :showUploadList="false"
-                :data="{code: userInfo.code}"
+                :data="{code: userInfo.id}"
                 :headers="headers"
                 :action="uploadAction"
                 :beforeUpload="beforeUpload"
@@ -73,7 +73,7 @@ export default {
       loading: false,
       form: this.$form.createForm(this),
       uploadLoading: false,
-      uploadAction: "project/index/uploadAvatar"
+      uploadAction: "api/user/uploadAvatar"
     };
   },
   computed: {
@@ -127,16 +127,16 @@ export default {
         this.uploadLoading = true;
         return;
       }
-      // if (info.file.status === "done") {
-      //   getBase64(info.file.originFileObj, imageUrl => {
-      //     this.userInfo.avatar = info.file.response.data.url;
-      //     this.$store.dispatch("SET_USER", this.userInfo);
-      //     this.uploadLoading = false;
-      //     setTimeout(function() {
-      //       destroyNotice();
-      //     }, 500);
-      //   });
-      // }
+      if (info.file.status === "done") {
+        getBase64(info.file.originFileObj, imageUrl => {
+          this.userInfo.avatar = info.file.response.msg;
+          this.$store.dispatch("setUser", this.userInfo);
+          this.uploadLoading = false;
+          setTimeout(function() {
+            destroyNotice();
+          }, 500);
+        });
+      }
     },
     beforeUpload(file) {
       const isLt2M = file.size / 1024 / 1024 < 2;

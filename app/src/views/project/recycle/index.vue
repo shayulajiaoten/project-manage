@@ -1,14 +1,14 @@
 <template>
   <div class="project-recycle-index">
     <wrapper-content :showHeader="false">
-      <div style="display: flex;justify-content: center">
+      <!-- <div style="display: flex;justify-content: center">
         <img
           style="height: 250px;"
           src="../../../assets/image/common/nullContent.png"
           alt
           v-show="!dataSource.length"
         />
-      </div>
+      </div> -->
       <a-list
         class="project-list"
         :loading="loading"
@@ -38,7 +38,7 @@
   </div>
 </template>
 <script>
-import { selfList as  list, doData, del } from "@/api/project";
+import { selfList as list, doData, del } from "@/api/project";
 import { checkResponse } from "@/assets/js/utils";
 import pagination from "@/mixins/pagination";
 import moment from "moment";
@@ -78,9 +78,9 @@ export default {
       app.loading = true;
       list(app.requestData.type).then(res => {
         console.log(res.data);
-        app.dataSource = app.dataSource.concat(res.data);
-        // app.pagination.total = res.data.total;
-        // app.showLoadingMore = app.pagination.total > app.dataSource.length;
+        if (res.errno != -1) {
+          app.dataSource = app.dataSource.concat(res.data);
+        }
         app.loading = false;
         app.loadingMore = false;
       });
@@ -98,7 +98,7 @@ export default {
     doAction(record, action, index) {
       this.currentProject = record;
       console.log(record);
-      
+
       let app = this;
       app.newData = { id: 0 };
       if (action == "recovery") {

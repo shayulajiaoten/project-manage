@@ -8,8 +8,11 @@
         :dataSource="dataSource"
         :locale="{emptyText:''}"
       >
-        <div v-if="showLoadingMore" slot="loadMore"
-          :style="{ textAlign: 'center', marginTop: '12px', height: '32px', lineHeight: '32px' }">
+        <div
+          v-if="showLoadingMore"
+          slot="loadMore"
+          :style="{ textAlign: 'center', marginTop: '12px', height: '32px', lineHeight: '32px' }"
+        >
           <a-spin v-if="loadingMore" />
           <a-button v-else @click="onLoadMore">查看更多项目</a-button>
         </div>
@@ -71,17 +74,15 @@ export default {
       let app = this;
       if (reset) {
         this.dataSource = [];
-        // this.pagination.page = 1;
-        // this.pagination.pageSize = 1000;
         this.showLoadingMore = false;
       }
       this.requestData.archive = 1;
       this.requestData.type = "archive";
       app.loading = true;
       list(app.requestData.type).then(res => {
-        app.dataSource = app.dataSource.concat(res.data);
-        // app.pagination.total = res.data.total;
-        // app.showLoadingMore = app.pagination.total > app.dataSource.length;
+        if (res.errno != -1) {
+          app.dataSource = app.dataSource.concat(res.data);
+        }
         app.loading = false;
         app.loadingMore = false;
       });

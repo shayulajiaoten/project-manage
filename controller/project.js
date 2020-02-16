@@ -34,8 +34,12 @@ const create_project = (projectName, templateId, description, teamName, username
   // 验证为团队队长后直接创建项目 
   const create_project = `
       insert into system_project 
-      (project_name,template_id,description,creator,able,team) values 
-      ('${projectName}','${templateId}','${description}','${username}',1,'${teamName}' )
+      (project_name,template_id,description,creator,able,team,resolve) values 
+      ('${projectName}','${templateId}','${description}','${username}',1,'${teamName}',1 )
+  `
+  // 查询模板对应cover
+  const select_sql = `
+    select *from  project_template where id='${templateId}'
   `
   return exec(test_sql).then(() => {
     return exec(test_leader_sql).then((rows) => {
@@ -45,6 +49,20 @@ const create_project = (projectName, templateId, description, teamName, username
             return exec(create_project).then((rows) => {
               const project_id = rows.insertId
               return exec(select_tempalte_sql).then((rows) => {
+
+                exec(select_sql).then((data) => {
+
+                  if (data[0].cover) {
+                    const update_sql = `
+                      update system_project
+                      set cover='${data[0].cover}'
+                      where id='${project_id}'
+                    `
+                    console.log(update_sql);
+
+                    exec(update_sql)
+                  }
+                })
                 rows.map((d, i) => {
                   // 添加对应模板任务
                   const add_task_sql = `
@@ -53,7 +71,7 @@ const create_project = (projectName, templateId, description, teamName, username
                     ('${d.task_name}','${username}','${project_id}')
                   `
                   console.log(add_task_sql);
-                  
+
                   con.query(add_task_sql)
                 })
                 return project_id
@@ -267,13 +285,17 @@ const collect_list = (username) => {
     const select_sql = `
       SELECT * FROM system_project WHERE (id IN (${projectIdList}) and recycle=0)
     `
-    return exec(select_sql).then((res) => {
-      return res.map((data) => {
-        return Object.assign(data, {
-          collected: 1
+    if (projectIdList.length > 0) {
+      return exec(select_sql).then((res) => {
+        return res.map((data) => {
+          return Object.assign(data, {
+            collected: 1
+          })
         })
       })
-    })
+    } else {
+      return []
+    }
   })
 }
 
@@ -286,9 +308,9 @@ const un_collect_project = (projectId, member_name) => {
 }
 
 // 更改项目信息
-const change_messsage_project = (projectId, plan, projectName, description) => {
+const change_messsage_project = (cover, projectId, plan, projectName, description) => {
   const change_sql = `
-      update system_project set  plan='${plan}',project_name='${projectName}',description='${description}' where id='${projectId}'
+      update system_project set  cover='${cover}',plan='${plan}',project_name='${projectName}',description='${description}' where id='${projectId}'
   `
   console.log(change_sql);
 
@@ -305,6 +327,7 @@ const invite_member = (projectId, memberName) => {
     ('${projectId}','${memberName}')
   `
 }
+
 module.exports = {
   create_project,
   project_list,

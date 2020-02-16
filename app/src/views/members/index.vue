@@ -74,10 +74,8 @@
             <a-list-item-meta>
               <a-avatar slot="avatar" :src="item.avatar" />
               <div slot="title">
-                <router-link :to="`/members/profile/${item.code}`" class="text-default">
-                  {{ item.name
+                  {{ item.member_name
                   }}
-                </router-link>
                 <a-tag class="m-l-sm" v-if="item.is_team_leader">团队管理员</a-tag>
               </div>
               <div slot="description">
