@@ -3,12 +3,12 @@
         <div class="container">
             <div class="top">
                 <div class="header">
-                    <a-badge :count="'Beta 2.0'">
-                        <a href="/">
-                            <img src="../../assets/image/common/logo.png" class="logo" alt="logo">
-                            <span class="title">Pear Project</span>
-                        </a>
-                    </a-badge>
+                    <!-- <a-badge :count="'Beta 2.0'"> -->
+                        <!-- <a href="/"> -->
+                            <!-- <img src="../../assets/image/common/logo.png" class="logo" alt="logo"> -->
+                            <span class="title">Shark Project</span>
+                        <!-- </a> -->
+                    <!-- </a-badge> -->
                 </div>
                 <div class="desc">{{desc}}</div>
             </div>
@@ -23,7 +23,6 @@
                       <a href="_self">条款</a>
                   </div>-->
                 <div class="copyright">
-                    Copyright &copy; 2019 Pear Project
                 </div>
             </div>
         </div>
@@ -38,7 +37,7 @@
             desc: {
                 type: [String],
                 default() {
-                    return '欢迎使用Pear Project项目管理系统';
+                    return '欢迎使用鲨鱼辣椒的项目管理系统';
                 }
             }
         }
