@@ -95,6 +95,8 @@ const subtask_list = (taskListId) => {
 }
 // 添加项目子任务
 const create_subtask = (projectTaskId, taskName, username, projectId) => {
+  console.log(projectTaskId);
+  
   const add_sql = `
     insert into task_sontask_relation
     (task_list_id,task_name,creator,project_id)

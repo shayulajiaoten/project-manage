@@ -5,7 +5,7 @@
       <a-layout id="layout" :class="layoutClass">
         <a-layout-header :class="{'collapsed':collapsed}">
           <div class="logo" @click="()=>{this.$router.push(config.HOME_PAGE)}">
-            <img class="logo-img" src="../assets/image/common/logo.png" alt />
+            <!-- <img class="logo-img" src="../assets/image/common/logo.png" alt /> -->
             <span class="title">项目管理系统</span>
           </div>
           <a-menu
