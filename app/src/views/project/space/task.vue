@@ -106,10 +106,11 @@
               :ops="scrollOps"
             >
               <section
-                :id="stage.code"
+                :id="stage.id"
                 :task-type-index="index"
                 class="scrum-stage-content thin-scroll"
               >
+                <!-- {{stage.id}} -->
                 <a-spin wrapperClassName="tasks-loading" :spinning="stage.tasksLoading">
                   <!--未完成列表-->
 
@@ -935,8 +936,8 @@ export default {
         this.$message.warning("请输入列表名称", 2);
         return false;
       }
-      createState({ taskName: this.stageName, projectId: this.code }).then(
-        res => {
+      createState({ taskName: this.stageName, projectId: this.code })
+        .then(res => {
           const result = checkResponse(res);
           if (!result) {
             return false;
@@ -947,8 +948,11 @@ export default {
           this.$nextTick(() => {
             document.getElementById("board-scrum-stages").scrollLeft = 10000;
           });
-        }
-      );
+        })
+        .then(() => {
+          this.getProject();
+          this.init();
+        });
     },
     editStage() {
       let stage = this.stageModal.form.getFieldsValue();
