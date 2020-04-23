@@ -206,7 +206,7 @@ router.post('/uploadAvatar', upload.single('avatar'), function (req, res, next) 
   const result = upload_avatar(`/public/avatar/${file.originalname}`, member_id)
   return result.then(() => {
     res.json(
-      new SuccessModel(`http://127.0.0.1:3000/public/avatar/${file.originalname}`)
+      new SuccessModel(`http://39.97.220.197:3100/public/avatar/${file.originalname}`)
     )
   })
 });

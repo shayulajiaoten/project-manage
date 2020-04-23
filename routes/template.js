@@ -147,7 +147,7 @@ router.post('/uploadCover', upload.single('cover'), function (req, res, next) {
   } = req.body
   const file = req.file;
   res.json(
-    new SuccessModel(`http://127.0.0.1:3000/public/template/cover/${file.originalname}`)
+    new SuccessModel(`http://39.97.220.197:3100/public/template/cover/${file.originalname}`)
   )
 });
 module.exports = router;

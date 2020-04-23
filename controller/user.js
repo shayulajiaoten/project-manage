@@ -139,7 +139,7 @@ const edit_email = (email, id) => {
 const upload_avatar = (src, id) => {
 	const upload_sql = `
 		update system_member
-		set avatar = 'http://127.0.0.1:3000${src}'
+		set avatar = 'http://39.97.220.197:3100${src}'
 		where
 		id ='${id}'
 	`

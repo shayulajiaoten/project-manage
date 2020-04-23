@@ -116,7 +116,7 @@ const del_task = (id) => {
 const upload_template_cover = (src, id) => {
   const upload_sql = `
 		update project_template
-		set cover = 'http://127.0.0.1:3000${src}'
+		set cover = 'http://39.97.220.197:3100${src}'
 		where
 		id ='${id}'
   `
