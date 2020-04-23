@@ -79,9 +79,9 @@
                       <a-tooltip
                         placement="right"
                         :mouseEnterDelay="0.3"
-                        :title="`当前进度：${item.schedule}%`"
+                        :title="`当前进度：${item.plan}%`"
                       >
-                        <a-progress :strokeWidth="2" :showInfo="false" :percent="item.schedule" />
+                        <a-progress :strokeWidth="2" :showInfo="false" :percent="item.plan" />
                       </a-tooltip>
                     </div>
                   </a-card-meta>

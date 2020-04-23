@@ -104,7 +104,7 @@ export default {
       if (action == "recovery") {
         this.$confirm({
           title: "确定恢复项目？",
-          content: `恢复「${this.currentProject.name}」后就可以正常使用了`,
+          content: `恢复「${this.currentProject.project_name}」后就可以正常使用了`,
           okText: "恢复项目",
           okType: "primary",
           cancelText: "再想想",

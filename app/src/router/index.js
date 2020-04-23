@@ -292,7 +292,7 @@ const menu = [{
   {
     id: "124",
     pid: 0,
-    title: "系统设置",
+    title: "个人管理",
     icon: "setting",
     url: "#",
     file_path: "#",

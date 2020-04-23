@@ -104,7 +104,7 @@ export default {
       if (action == "recoveryArchive") {
         this.$confirm({
           title: "取消归档项目？",
-          content: `取消归档「${this.currentProject.name}」后就可以正常使用了`,
+          content: `取消归档「${this.currentProject.project_name}」后就可以正常使用了`,
           okText: "取消归档",
           okType: "primary",
           cancelText: "再想想",
@@ -118,7 +118,7 @@ export default {
       } else if (action == "del") {
         this.$confirm({
           title: "确定放入回收站？",
-          content: `一旦将项目「${this.currentProject.name}」放入回收站，所有与项目有关的信息将会被放入回收站`,
+          content: `一旦将项目「${this.currentProject.project_name}」放入回收站，所有与项目有关的信息将会被放入回收站`,
           okText: "放入回收站",
           okType: "danger",
           cancelText: "再想想",

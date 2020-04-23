@@ -232,7 +232,7 @@ export default {
       if (!app.project.archive) {
         this.$confirm({
           title: "归档项目",
-          content: `一旦将项目「${this.project.name}」归档，本项目和所含信息将会被移到「归档项目」内，其中的内容依然会被统计和搜索收录，归档项目可以随时恢复并继续使用。`,
+          content: `一旦将项目「${this.project.project_name}」归档，本项目和所含信息将会被移到「归档项目」内，其中的内容依然会被统计和搜索收录，归档项目可以随时恢复并继续使用。`,
           okText: "归档",
           okType: "danger",
           cancelText: `再想想`,
@@ -270,7 +270,7 @@ export default {
       if (!app.project.deleted) {
         this.$confirm({
           title: "确定放入回收站？",
-          content: `一旦将项目「${this.project.name}」放入回收站，所有与项目有关的信息将会被放入回收站`,
+          content: `一旦将项目「${this.project.project_name}」放入回收站，所有与项目有关的信息将会被放入回收站`,
           okText: "放入回收站",
           okType: "danger",
           cancelText: "再想想",
@@ -287,7 +287,7 @@ export default {
       } else {
         this.$confirm({
           title: "确定恢复项目？",
-          content: `恢复「${this.project.name}」后就可以正常使用了`,
+          content: `恢复「${this.project.project_name}」后就可以正常使用了`,
           okText: "恢复项目",
           okType: "primary",
           cancelText: "再想想",

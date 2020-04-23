@@ -2,7 +2,7 @@
   <div class="project-list-index">
     <wrapper-content :showHeader="false">
       <div class="action">
-        <a-button type="primary" icon="plus" @click="doAction(null,'new')">创建新项目</a-button>
+        <a-button type="primary" icon="plus" @click="doAction(null,'new')">申请新项目</a-button>
       </div>
       <a-list
         class="project-list"
@@ -89,7 +89,7 @@
               size="large"
               :loading="actionInfo.confirmLoading"
               class="middle-btn"
-            >完成并创建</a-button>
+            >完成并申请</a-button>
           </div>
         </a-form-item>
       </a-form>
@@ -198,14 +198,14 @@ export default {
           app.form && app.form.resetFields();
         }, 0);
         app.actionInfo.modalStatus = true;
-        app.actionInfo.modalTitle = "创建项目";
+        app.actionInfo.modalTitle = "申请项目";
       } else if (action == "edit") {
         app.currentProjectCode = record.id;
         app.projectModal.modalStatus = true;
       } else if (action == "del") {
         this.$confirm({
           title: "确定放入回收站？",
-          content: `一旦将项目「${this.currentProject.name}」放入回收站，所有与项目有关的信息将会被放入回收站`,
+          content: `一旦将项目「${this.currentProject.project_name}」放入回收站，所有与项目有关的信息将会被放入回收站`,
           okText: "放入回收站",
           okType: "danger",
           cancelText: "再想想",
